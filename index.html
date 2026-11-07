@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Литературная викторина — 1–4 класс</title>
+<style>
+:root{--bg1:#e0f2fe;--bg2:#fff7e6;--card:#ffffff;--ink:#2c3e50;--muted:#6b7f8a;--accent:#f4511e;--accent2:#ff9800;--green:#2e7d32;--red:#d32f2f;--blue:#1976d2;--shadow:0 12px 32px rgba(0,0,0,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;position:relative;overflow-x:hidden}
+#app{width:100%;max-width:720px;margin:0 auto}
+.screen{width:100%}
+.card{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:30px;text-align:center}
+.hero-emoji{font-size:60px;line-height:1;margin-bottom:10px;animation:float 3s ease-in-out infinite}
+h1{font-size:2rem;color:var(--accent);margin-bottom:8px}
+.subtitle{color:var(--muted);font-size:1.02rem;margin-bottom:18px;line-height:1.45}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+.cat-btn{background:#fff;border:2px solid #e0e0e0;border-radius:16px;padding:16px 14px;cursor:pointer;text-align:center;transition:all .15s}
+.cat-btn:hover{transform:translateY(-3px);border-color:var(--accent2);box-shadow:0 8px 18px rgba(0,0,0,.1)}
+.cat-emoji{font-size:2.2rem;line-height:1;margin-bottom:6px}
+.cat-title{font-weight:700;font-size:1rem;margin-bottom:4px}
+.cat-desc{font-size:.8rem;color:var(--muted);margin-bottom:6px;line-height:1.3}
+.cat-count{display:inline-block;background:#e3f2fd;color:var(--blue);border-radius:999px;padding:2px 10px;font-size:.75rem;font-weight:700}
+.rules-note{color:var(--muted);font-size:.9rem;margin-top:6px;line-height:1.5}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
+.topbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.back-btn{background:#fff;border:2px solid #e0e0e0;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer;color:var(--ink);font-size:.9rem;transition:all .15s;box-shadow:var(--shadow);font-family:inherit}
+.back-btn:hover{border-color:var(--accent2);color:var(--accent)}
+.progress-info{font-weight:700;color:var(--ink)}
+.cat-pill{background:#fff;border-radius:999px;padding:6px 12px;font-size:.85rem;box-shadow:var(--shadow);margin-right:6px}
+.score-pill{background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;box-shadow:var(--shadow);color:var(--accent)}
+.progress-bar{height:12px;background:#e0e0e0;border-radius:999px;overflow:hidden;margin-bottom:20px}
+#progressFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:999px;transition:width .4s}
+.grade-badge{display:inline-block;background:#fff3e0;color:#e65100;border-radius:999px;padding:4px 14px;font-size:.85rem;font-weight:700;margin-bottom:10px}
+.q-title{font-size:1.4rem;margin-bottom:16px}
+.hints{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.hint-btn{width:100%;background:#e3f2fd;color:var(--blue);border:none;border-radius:14px;padding:11px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .2s}
+.hint-btn:hover{background:#bbdefb}
+.hint-btn.used{background:#eceff1;color:#90a4ae;cursor:default}
+.hint-content{background:#fff8e1;border-radius:16px;padding:14px;margin-top:8px;font-size:1.5rem;letter-spacing:.05em}
+.hint-content.line{font-style:italic;font-size:1.12rem;color:var(--ink);background:#f3e5f5}
+.hint-content.author{font-size:1.15rem;font-weight:700;background:#e8f5e9;color:var(--green)}
+.hint-content svg{max-width:100%;height:auto}
+.section-title{font-size:1.1rem;color:var(--blue);margin:20px 0 10px;text-align:left}
+.prompt{font-size:1.15rem;font-weight:600;margin-bottom:14px;line-height:1.4}
+.passage{background:#f1f8e9;border:1px solid #dcedc8;border-radius:14px;padding:14px;text-align:left;font-size:1rem;line-height:1.55;margin-bottom:14px;max-height:190px;overflow-y:auto;white-space:pre-wrap}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.opt-btn{display:flex;align-items:center;gap:10px;background:#fafafa;border:2px solid #e0e0e0;border-radius:14px;padding:13px 14px;font-size:1rem;font-weight:600;cursor:pointer;text-align:left;transition:all .15s;font-family:inherit;color:var(--ink)}
+.opt-btn:hover{background:#fff3e0;border-color:var(--accent2)}
+.opt-btn:disabled{cursor:default}
+.opt-btn .letter{background:var(--blue);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:.85rem}
+.opt-btn.correct{background:#e8f5e9;border-color:var(--green);animation:pop .4s}
+.opt-btn.correct .letter{background:var(--green)}
+.opt-btn.wrong{background:#ffebee;border-color:var(--red);animation:shake .4s}
+.opt-btn.wrong .letter{background:var(--red)}
+.match-box{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;align-items:start}
+.match-col{display:flex;flex-direction:column;gap:10px}
+.match-item{background:#fff;border:2px solid #e0e0e0;border-radius:12px;padding:12px 14px;font-weight:600;cursor:pointer;transition:all .15s;font-size:.95rem;font-family:inherit;color:var(--ink);line-height:1.35}
+.match-item:hover{border-color:var(--blue)}
+.match-item.selected{border-color:var(--blue);background:#e3f2fd}
+.match-item.done{border-color:var(--green);background:#e8f5e9;color:var(--green);cursor:default}
+.match-item.wrong-flash{border-color:var(--red);background:#ffebee;animation:shake .3s}
+.block-box{display:flex;flex-direction:column;gap:14px;margin-bottom:14px;text-align:left}
+.bq{border:2px solid #e0e0e0;border-radius:14px;padding:14px;background:#fff}
+.bq-text{font-weight:600;margin-bottom:10px;line-height:1.4}
+.bq-num{color:var(--blue);font-weight:700;margin-right:4px}
+.bq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bq-feedback{margin-top:10px;font-size:.92rem;color:var(--green);font-weight:600;line-height:1.4}
+.bq-feedback.bad{color:var(--red)}
+.toggle-btn{background:#fff3e0;border:2px solid #ffcc80;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer;color:#e65100;font-size:.9rem;margin-bottom:12px;font-family:inherit;transition:all .15s}
+.toggle-btn:hover{border-color:var(--accent2)}
+.hide-options .answers,.hide-options .bq-opts{display:none}
+.input-row{display:flex;gap:10px;margin-bottom:14px}
+#answerInput{flex:1;border:2px solid #e0e0e0;border-radius:14px;padding:13px 16px;font-size:1.05rem;font-family:inherit;outline:none;transition:border-color .15s}
+#answerInput:focus{border-color:var(--accent2)}
+.btn{border:none;border-radius:999px;padding:13px 24px;font-size:1.05rem;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;color:#fff;white-space:nowrap}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 6px 18px rgba(244,81,30,.35)}
+.btn-primary:hover{transform:translateY(-2px)}
+.feedback{border-radius:16px;padding:16px;margin-bottom:12px;font-size:1.02rem;text-align:left}
+.feedback.good{background:#e8f5e9;color:var(--green)}
+.feedback.bad{background:#ffebee;color:var(--red)}
+.feedback .fact{display:block;margin-top:8px;font-weight:400;color:var(--ink)}
+.feedback .right-answer{font-weight:700;color:var(--green)}
+.actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.giveup-btn{background:none;border:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.95rem;padding:8px}
+.giveup-btn:hover{color:var(--red)}
+.result-emoji{font-size:72px;line-height:1;margin-bottom:8px;animation:float 3s ease-in-out infinite}
+.stars{font-size:2.4rem;margin:12px 0;letter-spacing:6px}
+.star{filter:grayscale(1);opacity:.3;transition:all .3s}
+.star.on{filter:none;opacity:1;transform:scale(1.15)}
+.score-final{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+.score-final span{color:var(--accent)}
+.result-msg{color:var(--muted);margin-bottom:22px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hint-content.reveal{animation:fadeIn .3s}
+.confetti{position:fixed;top:-20px;width:10px;height:16px;border-radius:2px;z-index:9999;pointer-events:none;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0)}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@media (max-width:520px){.cat-grid{grid-template-columns:1fr}.answers{grid-template-columns:1fr}.match-box{grid-template-columns:1fr}.bq-opts{grid-template-columns:1fr}.input-row{flex-direction:column}.card{padding:22px}h1{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="startScreen" class="screen">
+    <div class="card hero">
+      <div class="hero-emoji">📚✨</div>
+      <h1>Литературная викторина</h1>
+      <p class="subtitle">Два режима: <b>викторина</b> (угадай произведение) и <b>тренажёр подготовки к ВПР</b> по литературе.</p>
+      <h2 class="section-title">🎯 Викторина — угадай произведение</h2>
+      <div class="cat-grid" id="catGrid"></div>
+      <h2 class="section-title">🎓 Подготовка к ВПР</h2>
+      <div class="cat-grid" id="vprGrid"></div>
+      <p class="rules-note">💡 В викторине подсказки (эмодзи, картинка, автор, строчка) можно открывать — но чем их меньше, тем больше очков. В тренажёре ВПР выбирай правильный ответ из четырёх.</p>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="screen" hidden>
+    <div class="topbar">
+      <div class="topbar-left">
+        <button id="backBtn" class="back-btn" title="Вернуться в меню">← Назад</button>
+        <div class="progress-info"><span class="cat-pill" id="catPill">🎲</span> <span id="qLabel">Вопрос</span> <span id="qNum">1</span> из <span id="qTotal">10</span></div>
+      </div>
+      <div class="score-pill">⭐ <span id="scorePill">0</span></div>
+    </div>
+    <div class="progress-bar"><div id="progressFill"></div></div>
+
+    <div class="card question-card" id="questionCard">
+      <div class="grade-badge" id="gradeBadge" hidden></div>
+      <h2 class="q-title" id="qTitle">Назови произведение</h2>
+      <button id="toggleOpts" class="toggle-btn" hidden>🙈 Скрыть варианты</button>
+      <div class="prompt" id="prompt" hidden></div>
+      <div class="passage" id="passage" hidden></div>
+      <div class="hints" id="hints"></div>
+      <div class="input-row" id="inputRow">
+        <input type="text" id="answerInput" placeholder="Впиши название…" autocomplete="off" />
+        <button id="checkBtn" class="btn btn-primary">✅ Проверить</button>
+      </div>
+      <div class="answers" id="options" hidden></div>
+      <div class="match-box" id="matchBox" hidden>
+        <div class="match-col" id="matchLeft"></div>
+        <div class="match-col" id="matchRight"></div>
+      </div>
+      <div class="block-box" id="blockBox" hidden></div>
+      <div class="feedback" id="feedback" hidden></div>
+      <div class="actions">
+        <button id="giveupBtn" class="giveup-btn" hidden>😔 Сдаюсь — покажи ответ</button>
+        <button id="nextBtn" class="btn btn-primary" hidden>Далее ➡️</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="resultScreen" class="screen" hidden>
+    <div class="card hero result">
+      <div class="result-emoji" id="resultEmoji">🏆</div>
+      <h1 id="resultTitle">Молодец!</h1>
+      <div class="stars" id="stars"></div>
+      <p class="score-final">Твой счёт: <span id="finalScore">0</span> очков</p>
+      <p class="result-msg" id="resultMsg"></p>
+      <button id="restartBtn" class="btn btn-primary">🔁 Играть ещё раз</button>
+      <button id="menuBtn" class="giveup-btn">← Выбрать другой раздел</button>
+    </div>
+  </section>
+</div>
+<script>
+const CATEGORIES = [
+  { id: 'pushkin', emoji: '🎩', title: 'Сказки и стихи Пушкина', desc: 'Александр Сергеевич Пушкин' },
+  { id: 'class', emoji: '📖', title: 'Литературное чтение', desc: 'По учебнику «Школа России»' },
+  { id: 'vneklass', emoji: '🌍', title: 'Внеклассное чтение', desc: 'Книги для чтения летом и дома' },
+  { id: 'mixed', emoji: '🎲', title: 'Всё вперемешку', desc: 'Смесь всех произведений' }
+];
+
+const pictures = {
+  saltan: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><path d="M0 105 Q50 92 100 105 T200 105 L200 140 L0 140 Z" fill="#4fc3f7"/><path d="M0 118 Q50 106 100 118 T200 118 L200 140 L0 140 Z" fill="#0288d1"/><path d="M45 88 Q85 66 122 86 Q136 97 116 106 Q80 112 45 88 Z" fill="#fff" stroke="#90a4ae" stroke-width="2"/><path d="M118 90 Q132 60 148 48 Q158 41 160 54 Q161 68 146 80" fill="#fff" stroke="#90a4ae" stroke-width="2"/><circle cx="158" cy="52" r="9" fill="#fff" stroke="#90a4ae" stroke-width="2"/><path d="M166 50 L183 53 L166 58 Z" fill="#ff7043"/><circle cx="161" cy="50" r="2.2" fill="#37474f"/><path d="M148 42 L150 31 L156 40 L161 28 L166 40 L172 31 L174 42 Z" fill="#ffd54f" stroke="#f9a825" stroke-width="1.5"/><text x="18" y="46" font-size="20">✨</text></svg>`,
+  fish: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><ellipse cx="85" cy="70" rx="58" ry="34" fill="#ffc107" stroke="#e65100" stroke-width="2.5"/><path d="M142 70 L184 42 L184 98 Z" fill="#ff9800" stroke="#e65100" stroke-width="2.5"/><path d="M85 36 C70 16 48 16 43 32 C38 48 56 52 60 42 Z" fill="#ffb300" stroke="#e65100" stroke-width="2"/><path d="M85 104 C70 124 48 124 43 108 C38 92 56 88 60 98 Z" fill="#ffb300" stroke="#e65100" stroke-width="2"/><circle cx="45" cy="62" r="6" fill="#fff" stroke="#333" stroke-width="1.5"/><circle cx="43" cy="62" r="3" fill="#333"/><path d="M70 82 Q80 90 92 82" stroke="#e65100" stroke-width="2" fill="none"/><text x="150" y="30" font-size="20">✨</text></svg>`,
+  rooster: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><ellipse cx="92" cy="96" rx="42" ry="30" fill="#ffa000" stroke="#bf360c" stroke-width="2.5"/><path d="M52 88 C28 74 22 48 34 40 C24 60 34 76 52 88 Z" fill="#e65100"/><path d="M118 74 Q130 48 132 42" stroke="#ffa000" stroke-width="16" fill="none" stroke-linecap="round"/><circle cx="133" cy="40" r="13" fill="#ffc107" stroke="#bf360c" stroke-width="2.5"/><path d="M129 28 L132 17 L137 26 L141 16 L146 26 L150 28 Z" fill="#d32f2f"/><path d="M146 38 L160 43 L146 48 Z" fill="#f9a825" stroke="#bf360c" stroke-width="1.5"/><circle cx="138" cy="37" r="3" fill="#fff"/><circle cx="139" cy="37" r="1.5" fill="#333"/><line x1="88" y1="126" x2="84" y2="140" stroke="#f9a825" stroke-width="3"/><line x1="102" y1="126" x2="108" y2="140" stroke="#f9a825" stroke-width="3"/><text x="150" y="72" font-size="20">✨</text></svg>`,
+  mirror: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><ellipse cx="80" cy="66" rx="38" ry="48" fill="#fff8e1" stroke="#8d6e63" stroke-width="6"/><ellipse cx="80" cy="66" rx="26" ry="36" fill="#b3e5fc"/><path d="M62 42 Q72 28 82 42" stroke="#fff" stroke-width="3" fill="none"/><rect x="72" y="110" width="16" height="24" rx="7" fill="#8d6e63"/><circle cx="152" cy="72" r="26" fill="#e53935" stroke="#b71c1c" stroke-width="2.5"/><path d="M152 47 Q153 40 159 35" stroke="#6d4c41" stroke-width="3" fill="none"/><ellipse cx="160" cy="33" rx="8" ry="4" fill="#43a047"/></svg>`,
+  church: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><rect x="52" y="84" width="96" height="42" fill="#fafafa" stroke="#90a4ae" stroke-width="2.5"/><rect x="93" y="98" width="14" height="28" fill="#8d6e63"/><path d="M42 84 L100 52 L158 84 Z" fill="#ff8a65" stroke="#bf360c" stroke-width="2.5"/><path d="M92 52 Q100 32 108 52 Q100 42 92 52 Z" fill="#ffca28"/><circle cx="100" cy="38" r="8" fill="#ffca28" stroke="#f9a825" stroke-width="2"/><line x1="100" y1="40" x2="100" y2="24" stroke="#f9a825" stroke-width="2.5"/><line x1="94" y1="32" x2="106" y2="32" stroke="#f9a825" stroke-width="2.5"/><circle cx="172" cy="88" r="12" fill="#ffe0b2" stroke="#bf360c" stroke-width="2"/><rect x="165" y="100" width="14" height="26" rx="4" fill="#e53935"/></svg>`,
+  oak: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><rect x="82" y="58" width="20" height="66" rx="6" fill="#8d6e63" stroke="#5d4037" stroke-width="2.5"/><circle cx="92" cy="48" r="38" fill="#43a047" stroke="#2e7d32" stroke-width="2.5"/><circle cx="62" cy="62" r="24" fill="#66bb6a"/><circle cx="122" cy="62" r="24" fill="#388e3c"/><ellipse cx="92" cy="92" rx="22" ry="8" fill="none" stroke="#fbc02d" stroke-width="4"/><ellipse cx="92" cy="108" rx="22" ry="8" fill="none" stroke="#fbc02d" stroke-width="4"/><ellipse cx="60" cy="106" rx="16" ry="11" fill="#37474f"/><circle cx="49" cy="96" r="7" fill="#37474f"/><path d="M44 91 L41 85 L48 90 Z" fill="#37474f"/><path d="M51 91 L48 85 L55 90 Z" fill="#37474f"/><circle cx="47" cy="95" r="1.5" fill="#8bc34a"/><path d="M56 110 Q63 102 71 106" stroke="#37474f" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`,
+  horse: `<svg viewBox="0 0 220 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Конёк-горбунок"><path d="M48 84 Q30 78 26 60 Q40 70 50 86 Z" fill="#5d4037"/><g stroke="#a1887f" stroke-width="9" stroke-linecap="round"><line x1="70" y1="116" x2="68" y2="142"/><line x1="92" y1="118" x2="94" y2="142"/><line x1="116" y1="118" x2="118" y2="142"/><line x1="136" y1="114" x2="138" y2="140"/></g><g stroke="#3e2723" stroke-width="9" stroke-linecap="round"><line x1="68" y1="140" x2="68" y2="143"/><line x1="94" y1="140" x2="94" y2="143"/><line x1="118" y1="140" x2="118" y2="143"/><line x1="138" y1="138" x2="138" y2="141"/></g><ellipse cx="100" cy="90" rx="55" ry="28" fill="#a1887f" stroke="#4e342e" stroke-width="3"/><path d="M138 78 Q150 56 158 50" fill="none" stroke="#a1887f" stroke-width="22" stroke-linecap="round"/><path d="M134 72 Q146 54 150 50" fill="none" stroke="#5d4037" stroke-width="6" stroke-linecap="round"/><g fill="#a1887f" stroke="#4e342e" stroke-width="3"><ellipse cx="164" cy="48" rx="14" ry="11"/><ellipse cx="184" cy="53" rx="11" ry="8"/></g><path d="M160 38 L164 28 L170 38 Z" fill="#a1887f" stroke="#4e342e" stroke-width="2.5"/><circle cx="168" cy="46" r="3" fill="#333"/><circle cx="190" cy="53" r="1.8" fill="#4e342e"/></svg>`,
+  turnip: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><path d="M100 78 C72 78 60 100 60 116 C60 132 78 138 100 138 C122 138 140 132 140 116 C140 100 128 78 100 78 Z" fill="#ffd54f" stroke="#f9a825" stroke-width="2.5"/><path d="M98 74 C96 62 90 54 88 46" stroke="#43a047" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M102 74 C106 60 112 52 116 44" stroke="#43a047" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="92" cy="50" rx="8" ry="4" fill="#66bb6a" transform="rotate(-30 92 50)"/><ellipse cx="112" cy="48" rx="8" ry="4" fill="#66bb6a" transform="rotate(25 112 48)"/><text x="40" y="60" font-size="18">🌱</text></svg>`,
+  bear: `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" role="img"><circle cx="100" cy="80" r="40" fill="#8d6e63" stroke="#4e342e" stroke-width="2.5"/><circle cx="100" cy="38" r="22" fill="#a1887f" stroke="#4e342e" stroke-width="2.5"/><circle cx="90" cy="34" r="5" fill="#a1887f" stroke="#4e342e" stroke-width="2"/><circle cx="110" cy="34" r="5" fill="#a1887f" stroke="#4e342e" stroke-width="2"/><circle cx="92" cy="34" r="2" fill="#4e342e"/><circle cx="112" cy="34" r="2" fill="#4e342e"/><ellipse cx="100" cy="46" rx="8" ry="6" fill="#5d4037"/><ellipse cx="60" cy="120" rx="14" ry="9" fill="#8d6e63"/><ellipse cx="140" cy="120" rx="14" ry="9" fill="#8d6e63"/><circle cx="100" cy="95" rx="16" ry="12" fill="#c8a27a"/><text x="20" y="40" font-size="18">🍯</text></svg>`
+};
+const QUESTIONS = [
+  {cat:'pushkin',gr:3,ans:['сказка о царе салтане','царь салтан'],em:'👑 🌊 🤴 🦢 🐿️',pic:'saltan',au:'А. С. Пушкин',ln:'«Ветер по морю гуляет и кораблик подгоняет…»',fact:'33 богатыря выходят из моря, а белка грызёт золотые орешки.'},
+  {cat:'pushkin',gr:2,ans:['сказка о рыбаке и рыбке','рыбак и рыбка','золотая рыбка'],em:'🎣 🐟 🌊 👵',pic:'fish',au:'А. С. Пушкин',ln:'«Дурачина ты, простофиля!»',fact:'Жадная старуха хотела стать владычицей морскою, но осталась у разбитого корыта.'},
+  {cat:'pushkin',gr:4,ans:['сказка о золотом петушке','золотой петушок'],em:'🐔 ✨ 👑',pic:'rooster',au:'А. С. Пушкин',ln:'«Кири-ку-ку. Царствуй, лёжа на боку!»',fact:'Петушок предупреждал царя Дадона об опасности. «Сказка ложь, да в ней намёк!»'},
+  {cat:'pushkin',gr:4,ans:['сказка о мёртвой царевне и о семи богатырях','мёртвая царевна','сказка о мертвой царевне'],em:'🍎 🪞 👸 😴',pic:'mirror',au:'А. С. Пушкин',ln:'«Свет мой, зеркальце! скажи да всю правду доложи…»',fact:'Злая царица отравила царевну наливным яблочком, но королевич Елисей её разбудил.'},
+  {cat:'pushkin',gr:null,ans:['сказка о попе и о работнике его балде','поп и балда','сказка о попе и балде'],em:'⛪ 👷 🐎 💰',pic:'church',au:'А. С. Пушкин',ln:'«Жил-был поп, толоконный лоб…»',fact:'Балда согласился работать у попа за три щелчка по лбу в год.'},
+  {cat:'pushkin',gr:1,ans:['руслан и людмила','у лукоморья'],em:'🌳 🐈 🔗 📖',pic:'oak',au:'А. С. Пушкин',ln:'«У лукоморья дуб зелёный; златая цепь на дубе том…»',fact:'Это поэма, а её знаменитое начало «У лукоморья…» знакомо каждому.'},
+  {cat:'pushkin',gr:3,ans:['зимнее утро','мороз и солнце'],em:'❄️ ☀️ 🌲',au:'А. С. Пушкин',ln:'«Мороз и солнце; день чудесный!»',fact:'Стихотворение о красоте морозного зимнего дня.'},
+  {cat:'pushkin',gr:3,ans:['зимний вечер','буря мглою небо кроет'],em:'🌨️ 🏠 🔥',au:'А. С. Пушкин',ln:'«Буря мглою небо кроет, вихри снежные крутя…»',fact:'Стихотворение о зимней буре и няне.'},
+  {cat:'pushkin',gr:4,ans:['няне','подруга дней моих суровых'],em:'👵 💗',au:'А. С. Пушкин',ln:'«Подруга дней моих суровых, голубка дряхлая моя!»',fact:'Посвящено няне поэта — Арине Родионовне.'},
+  {cat:'pushkin',gr:2,ans:['уж небо осенью дышало'],em:'🍂 🌧️',au:'А. С. Пушкин',ln:'«Уж небо осенью дышало, уж реже солнышко блистало…»',fact:'Отрывок из романа в стихах «Евгений Онегин».'},
+  {cat:'pushkin',gr:4,ans:['унылая пора очей очарованье','унылая пора'],em:'🍁',au:'А. С. Пушкин',ln:'«Унылая пора! Очей очарованье!»',fact:'Стихотворение, посвящённое осени.'},
+  {cat:'pushkin',gr:4,ans:['туча','последняя туча рассеянной бури'],em:'⛅ 🌤️',au:'А. С. Пушкин',ln:'«Последняя туча рассеянной бури!»',fact:'Поэт обращается к последней грозовой туче.'},
+  {cat:'pushkin',gr:4,ans:['зимняя дорога','сквозь волнистые туманы'],em:'🌙 🛷 ❄️',au:'А. С. Пушкин',ln:'«Сквозь волнистые туманы пробирается луна…»',fact:'Стихотворение о зимней ночной дороге.'},
+  {cat:'class',gr:1,ans:['репка'],em:'🧑‍🌾 🥕 🌱',pic:'turnip',ln:'«Посадил дед репку — выросла репка большая-пребольшая…»',fact:'Русская народная сказка: вместе любое дело по плечу.'},
+  {cat:'class',gr:1,ans:['колобок'],em:'🥯 🦊',ln:'«Я от бабушки ушёл, я от дедушки ушёл…»',fact:'Русская народная сказка о хвастливом колобке.'},
+  {cat:'class',gr:1,ans:['теремок'],em:'🏠 🐭 🐸 🐰 🦊 🐻',ln:'«Стоит в поле теремок…»',fact:'Русская народная сказка о зверях в теремке.'},
+  {cat:'class',gr:1,ans:['курочка ряба'],em:'🐔 🥚',ln:'«Жили-были дед да баба. Была у них курочка Ряба…»',fact:'Русская народная сказка.'},
+  {cat:'class',gr:1,ans:['гуси-лебеди','гуси лебеди'],em:'🦢 👧 👦',ln:'«Унесли гуси-лебеди братца на крыльях…»',fact:'Русская народная сказка: сестрица спасла братца.'},
+  {cat:'class',gr:1,ans:['рукавичка'],em:'🧤 🐭 🐸',ln:'«Шёл дед лесом, обронил рукавичку…»',fact:'Русская народная сказка (похожа на «Теремок»).'},
+  {cat:'class',gr:2,ans:['каша из топора'],em:'🍲 🪓',ln:'«Из топора кашу сварить можно!»',fact:'Русская народная сказка о хитром солдате.'},
+  {cat:'class',gr:2,ans:['лиса и журавль'],em:'🦊 🐦',ln:'«Как аукнется, так и откликнется!»',fact:'Русская народная сказка.'},
+  {cat:'class',gr:1,ans:['телефон'],em:'☎️ 🐘',au:'К. Чуковский',ln:'«У меня зазвонил телефон…»',fact:'Сказка в стихах Корнея Чуковского.'},
+  {cat:'class',gr:2,ans:['федорино горе'],em:'🍽️ 🧹',au:'К. Чуковский',ln:'«Скачет сито по полям, а корыто по лугам…»',fact:'Сказка о том, как от Федоры сбежала посуда.'},
+  {cat:'class',gr:2,ans:['путаница'],em:'🐱 🐷 🐤',au:'К. Чуковский',ln:'«Замяукали котята: "Надоело нам мяукать!"»',fact:'Сказка в стихах, где звери перепутали голоса.'},
+  {cat:'class',gr:2,ans:['лебедь рак и щука'],em:'🦢 🦞 🐟',au:'И. А. Крылов',ln:'«Когда в товарищах согласья нет, на лад их дело не пойдёт…»',fact:'Басня о том, что нужно действовать сообща.'},
+  {cat:'class',gr:2,ans:['стрекоза и муравей'],em:'🦗 🐜',au:'И. А. Крылов',ln:'«Попрыгунья Стрекоза лето красное пропела…»',fact:'Басня о лени и трудолюбии.'},
+  {cat:'class',gr:2,ans:['филипок'],em:'👦 📚',au:'Л. Н. Толстой',ln:'«Был мальчик, звали его Филипп…»',fact:'Рассказ о мальчике, который очень хотел учиться.'},
+  {cat:'class',gr:2,ans:['старый дед и внучек'],em:'👴 👶',au:'Л. Н. Толстой',ln:'«Стал дед очень стар…»',fact:'Рассказ о том, что к старости нужно относиться с уважением.'},
+  {cat:'class',gr:3,ans:['мартышка и очки'],em:'🐵 👓',au:'И. А. Крылов',ln:'«Мартышка к старости слаба глазами стала…»',fact:'Басня о том, что незнание не исправить покупкой вещей.'},
+  {cat:'class',gr:3,ans:['ворона и лисица'],em:'🐦⬛ 🦊 🧀',au:'И. А. Крылов',ln:'«Уж сколько раз твердили миру, что лесть гнусна, вредна…»',fact:'Басня о вороне, которую обманула хитрая лиса.'},
+  {cat:'class',gr:3,ans:['зеркало и обезьяна'],em:'🪞 🐵',au:'И. А. Крылов',ln:'«Мартышка, в Зеркале увидя образ свой…»',fact:'Басня о том, что свои недостатки увидеть труднее всего.'},
+  {cat:'class',gr:3,ans:['сестрица алёнушка и братец иванушка','алёнушка и иванушка'],em:'👧 👦 🐐',ln:'«Не пей, братец, — козлёночком станешь!»',fact:'Русская народная сказка.'},
+  {cat:'class',gr:3,ans:['иван-царевич и серый волк','иван царевич и серый волк'],em:'👑 🐺 🔥',ln:'«Жил-был царь, у него было три сына…»',fact:'Русская народная сказка о волшебном сером волке.'},
+  {cat:'class',gr:3,ans:['сивка-бурка','сивка бурка'],em:'🐴 ⚡',pic:'horse',ln:'«Сивка-бурка, вещая каурка, стань передо мной, как лист перед травой!»',fact:'Русская народная сказка о волшебном коне.'},
+  {cat:'class',gr:3,ans:['горные вершины'],em:'🏔️ 🌙',au:'М. Ю. Лермонтов',ln:'«Горные вершины спят во тьме ночной…»',fact:'Стихотворение о тишине горной ночи.'},
+  {cat:'class',gr:3,ans:['утёс','утес'],em:'🪨 ☁️',au:'М. Ю. Лермонтов',ln:'«Ночевала тучка золотая на груди утёса-великана…»',fact:'Стихотворение об одиноком утёсе.'},
+  {cat:'class',gr:3,ans:['акула'],em:'🦈 🚢',au:'Л. Н. Толстой',ln:'«Наш корабль стоял на якоре у берега Африки…»',fact:'Рассказ о мальчиках, купавшихся в открытом море.'},
+  {cat:'class',gr:3,ans:['прыжок'],em:'🐒 ⚓',au:'Л. Н. Толстой',ln:'«Один корабль обошёл вокруг света…»',fact:'Рассказ о мальчике и обезьяне на мачте корабля.'},
+  {cat:'class',gr:3,ans:['лев и собачка'],em:'🦁 🐶',au:'Л. Н. Толстой',ln:'«В Лондоне показывали диких зверей…»',fact:'Рассказ о верности и дружбе льва и собачки.'},
+  {cat:'class',gr:3,ans:['лягушка-путешественница','лягушка путешественница'],em:'🐸 🦆 ✈️',au:'В. М. Гаршин',ln:'«Жила-была на свете лягушка-квакушка…»',fact:'Сказка о хвастливой лягушке, полетевшей с утками.'},
+  {cat:'class',gr:3,ans:['мороз иванович'],em:'🧊 👴',au:'В. Ф. Одоевский',ln:'«Жили-были Рукодельница да Ленивица…»',fact:'Сказка о том, что труд вознаграждается.'},
+  {cat:'class',gr:3,ans:['гадкий утёнок','гадкий утенок'],em:'🐣 🦢',au:'Г. Х. Андерсен',ln:'«Хорошо было за городом!»',fact:'Сказка о том, как гадкий утёнок стал прекрасным лебедем.'},
+  {cat:'class',gr:3,ans:['черёмуха','черемуха'],em:'🌸 🌳',au:'С. А. Есенин',ln:'«Черёмуха душистая с весною расцвела…»',fact:'Стихотворение о весенней черёмухе.'},
+  {cat:'class',gr:3,ans:['слон'],em:'🐘 🏠',au:'А. И. Куприн',ln:'«Маленькая девочка нездорова…»',fact:'Рассказ о том, как к больной девочке привели настоящего слона.'},
+  {cat:'class',gr:3,ans:['моя родина'],em:'🌅 🌾',au:'М. М. Пришвин',ln:'«Мать моя вставала рано, до солнца…»',fact:'Рассказ о любви к родной природе.'},
+  {cat:'class',gr:4,ans:['конёк-горбунок','конек горбунок'],em:'🐴 🐳 🔥',pic:'horse',au:'П. П. Ершов',ln:'«За горами, за лесами, за широкими морями…»',fact:'Сказка об Иване и его волшебном коньке-горбунке.'},
+  {cat:'class',gr:4,ans:['ашик-кериб','ашик кериб'],em:'🎻 💍',au:'М. Ю. Лермонтов',ln:'«Давно тому назад, в городе Тифлизе…»',fact:'Турецкая сказка, записанная Лермонтовым.'},
+  {cat:'class',gr:4,ans:['как мужик убрал камень'],em:'🪨 👨‍🌾',au:'Л. Н. Толстой',ln:'«На площади в одном городе лежал огромный камень…»',fact:'Быль о простом и умном решении.'},
+  {cat:'class',gr:4,ans:['городок в табакерке'],em:'🎼 📦',au:'В. Ф. Одоевский',ln:'«Папенька поставил на стол табакерку…»',fact:'Сказка о том, как устроена музыкальная табакерка.'},
+  {cat:'class',gr:4,ans:['сказка о жабе и розе'],em:'🌹 🐸',au:'В. М. Гаршин',ln:'«Жили на свете роза и жаба…»',fact:'Сказка о красоте и уродстве души.'},
+  {cat:'class',gr:4,ans:['серебряное копытце'],em:'🦌 ❄️ 💎',au:'П. П. Бажов',ln:'«Жил в заводе старик один, по прозвищу Кокованя…»',fact:'Сказ о волшебном козлике с серебряным копытцем.'},
+  {cat:'class',gr:4,ans:['аленький цветочек'],em:'🌺 🌸',au:'С. Т. Аксаков',ln:'«В некиим царстве, в некиим государстве жил-был богатый купец…»',fact:'Сказка о красавице и заколдованном принце.'},
+  {cat:'class',gr:4,ans:['сказка о потерянном времени'],em:'⏰ 🧓',au:'Е. Л. Шварц',ln:'«Жил-был мальчик по имени Петя Зубов…»',fact:'Сказка о том, как ценно время.'},
+  {cat:'class',gr:4,ans:['русалочка'],em:'🧜‍♀️ 🌊',au:'Г. Х. Андерсен',ln:'«В открытом море вода совсем синяя, как лепестки васильков…»',fact:'Сказка о русалочке, полюбившей принца.'},
+  {cat:'class',gr:4,ans:['приключения тома сойера','том сойер'],em:'👦 🎨 🤍',au:'Марк Твен',ln:'«Том Сойер красил забор в воскресенье…»',fact:'Повесть о приключениях озорного мальчика Тома.'},
+  {cat:'class',gr:4,ans:['мальчики'],em:'👦 👦 📜',au:'А. П. Чехов',ln:'«Володя приехал на каникулы…»',fact:'Рассказ о мальчиках, мечтавших бежать в Америку.'},
+  {cat:'class',gr:4,ans:['листопад'],em:'🍂 🍁',au:'И. А. Бунин',ln:'«Лес, точно терем расписной, лиловый, золотой, багряный…»',fact:'Стихотворение об осеннем лесе.'},
+  {cat:'class',gr:4,ans:['корзина с еловыми шишками'],em:'🧺 🌲 🎶',au:'К. Г. Паустовский',ln:'«Композитор Эдвард Григ проводил осень в лесах около Бергена…»',fact:'Рассказ о композиторе Григе и девочке Дагни.'},
+  {cat:'class',gr:4,ans:['ёлка','елка'],em:'🎄',au:'М. М. Зощенко',ln:'«В этом году мне исполнилось, ребята, сорок лет…»',fact:'Рассказ о детях, которые чуть не испортили праздник.'},
+  {cat:'class',gr:4,ans:['приёмыш','приемыш'],em:'🦢 🏞️',au:'Д. Н. Мамин-Сибиряк',ln:'«В дождливый летний день я подходил к Светлому озеру…»',fact:'Рассказ о лебеде, выросшем у старого сторожа.'},
+  {cat:'class',gr:4,ans:['барбос и жулька'],em:'🐕 🐩',au:'А. И. Куприн',ln:'«Барбос был невелик ростом, но приземист…»',fact:'Рассказ о двух совершенно разных собаках.'},
+  {cat:'class',gr:4,ans:['выскочка'],em:'🐶 🦴',au:'М. М. Пришвин',ln:'«Наша охотничья собака, лайка, приехала к нам с берегов Бии…»',fact:'Рассказ о собаке Вьюшке и хитрой сороке.'},
+  {cat:'class',gr:4,ans:['стрижонок скрип'],em:'🐦 🪺',au:'В. П. Астафьев',ln:'«Стрижонок вылупился из яичка в тёмной норке…»',fact:'Рассказ о жизни маленького стрижонка.'},
+  {cat:'class',gr:4,ans:['ильины три поездочки'],em:'🛡️ 🐴',ln:'«Как из славного из города из Мурома…»',fact:'Былина о богатыре Илье Муромце.'},
+  {cat:'class',gr:4,ans:['житие сергия радонежского'],em:'⛪ 🙏',ln:'«Преподобный Сергий родился от благочестивых родителей…»',fact:'Житие святого Сергия Радонежского.'},
+  {cat:'vneklass',gr:1,ans:['маша и медведь'],em:'🐻 👧',pic:'bear',ln:'«Не садись на пенёк, не ешь пирожок!»',fact:'Русская народная сказка о находчивой Маше.'},
+  {cat:'vneklass',gr:1,ans:['три медведя'],em:'🐻 🐻 🐻 👧',pic:'bear',au:'Л. Н. Толстой (обработка)',ln:'«Одна девочка ушла из дома в лес и заблудилась…»',fact:'Сказка о девочке, попавшей в дом трёх медведей.'},
+  {cat:'vneklass',gr:2,ans:['по щучьему велению'],em:'🐟 ✨ 🛷',ln:'«По щучьему велению, по моему хотению!»',fact:'Русская народная сказка о ленивом Емеле и волшебной щуке.'},
+  {cat:'vneklass',gr:3,ans:['царевна-лягушка','царевна лягушка'],em:'🐸 👸 🏹',ln:'«Пустил Иван-царевич стрелу — упала она в болото…»',fact:'Русская народная сказка о заколдованной царевне.'},
+  {cat:'vneklass',gr:2,ans:['морозко'],em:'❄️ 👧',ln:'«Тепло ли тебе, девица? Тепло ли тебе, красная?»',fact:'Русская народная сказка о доброй падчерице.'},
+  {cat:'vneklass',gr:1,ans:['снегурочка'],em:'❄️ 👧',ln:'«Жили-были старик со старухой…»',fact:'Русская народная сказка о девочке из снега.'},
+  {cat:'vneklass',gr:3,ans:['двенадцать месяцев'],em:'🌨️ 🌷 ⏰',au:'С. Я. Маршак',ln:'«Знаешь ли ты, сколько месяцев в году?»',fact:'Сказка о том, как падчерица нашла подснежники зимой.'},
+  {cat:'vneklass',gr:2,ans:['винни-пух','винни пух'],em:'🐻 🍯',au:'А. Милн',ln:'«Кто ходит в гости по утрам, тот поступает мудро…»',fact:'Сказка о медвежонке, который очень любит мёд.'},
+  {cat:'vneklass',gr:2,ans:['малыш и карлсон'],em:'👦 🧑‍✈️',au:'А. Линдгрен',ln:'«Спокойствие, только спокойствие!»',fact:'Сказка о человечке с пропеллером, который живёт на крыше.'},
+  {cat:'vneklass',gr:3,ans:['пеппи длинныйчулок'],em:'👧 🧦',au:'А. Линдгрен',ln:'«Пеппи поселилась в вилле "Курица"…»',fact:'Повесть о самой сильной девочке в мире.'},
+  {cat:'vneklass',gr:3,ans:['приключения чиполлино','чиполлино'],em:'🧅',au:'Дж. Родари',ln:'«Чиполлино был сыном Чиполлоне…»',fact:'Сказка о мальчике-луковке.'},
+  {cat:'vneklass',gr:2,ans:['бременские музыканты'],em:'🐴 🐕 🐈 🐓 🎸',au:'Братья Гримм',ln:'«Осёл, пёс, кот и петух отправились в город Бремен…»',fact:'Сказка о животных, которые стали музыкантами.'},
+  {cat:'vneklass',gr:2,ans:['золушка'],em:'👗 🎃 👠',au:'Ш. Перро',ln:'«Золушка потеряла хрустальную туфельку…»',fact:'Сказка о трудолюбивой девушке и волшебном бале.'},
+  {cat:'vneklass',gr:2,ans:['белоснежка и семь гномов'],em:'🍎 👸 👨‍👨‍👦',au:'Братья Гримм',ln:'«У одной королевы родилась дочь, белая как снег…»',fact:'Сказка о царевне, уснувшей от отравленного яблока.'},
+  {cat:'vneklass',gr:3,ans:['рикки-тикки-тави','рикки тикки тави'],em:'🐍 🦔',au:'Р. Киплинг',ln:'«Это рассказ о великой войне, которую вёл мангуст…»',fact:'Сказка о храбром мангусте, спасшем семью от змей.'},
+  {cat:'vneklass',gr:3,ans:['маугли'],em:'🐺 🐻 👦',au:'Р. Киплинг',ln:'«Мы с тобой одной крови — ты и я!»',fact:'Сказка о мальчике, выросшем среди волков.'},
+  {cat:'vneklass',gr:3,ans:['волшебник изумрудного города'],em:'🌪️ 🏙️ 🟢',au:'А. М. Волков',ln:'«Девочка Элли попала в Волшебную страну…»',fact:'Сказка о девочке Элли и её друзьях.'},
+  {cat:'vneklass',gr:2,ans:['приключения незнайки','незнайка'],em:'👦 🎨',au:'Н. Н. Носов',ln:'«В одном сказочном городе жили коротышки…»',fact:'Сказка о коротышке, который ничего не знал, но очень старался.'},
+  {cat:'vneklass',gr:2,ans:['приключения буратино','буратино','золотой ключик'],em:'🤥 👃 🔑',au:'А. Н. Толстой',ln:'«У папы Карло был деревянный мальчик Буратино…»',fact:'Сказка о деревянном мальчике и золотом ключике.'},
+  {cat:'vneklass',gr:2,ans:['дядя стёпа','дядя степа'],em:'👮‍♂️ 🏢',au:'С. В. Михалков',ln:'«В доме восемь дробь один у заставы Ильича…»',fact:'Поэма о великане-милиционере.'},
+  {cat:'vneklass',gr:3,ans:['чук и гек'],em:'👦 👦 ❄️',au:'А. П. Гайдар',ln:'«Жил человек в лесу возле Синих гор…»',fact:'Рассказ о братьях и их путешествии к отцу.'},
+  {cat:'vneklass',gr:4,ans:['тимур и его команда'],em:'⭐ 🤝',au:'А. П. Гайдар',ln:'«Летом я жил на даче…»',fact:'Повесть о пионере Тимуре, который тайно помогал людям.'},
+  {cat:'vneklass',gr:2,ans:['крокодил гена'],em:'🐊 🎵',au:'Э. Н. Успенский',ln:'«Пусть бегут неуклюже пешеходы по лужам…»',fact:'Сказка о крокодиле Гене и Чебурашке.'},
+  {cat:'vneklass',gr:4,ans:['алиса в стране чудес'],em:'👧 🐇 🕳️',au:'Л. Кэрролл',ln:'«Алиса побежала за белым кроликом…»',fact:'Сказка о девочке Алисе и её необыкновенных приключениях.'},
+  {cat:'vneklass',gr:4,ans:['маленький принц'],em:'👦 🌹 🦊',au:'А. де Сент-Экзюпери',ln:'«Мы в ответе за тех, кого приручили»',fact:'Сказка-притча о маленьком принце и его розе.'},
+  {cat:'vneklass',gr:4,ans:['каменный цветок'],em:'💎 🌺',au:'П. П. Бажов',ln:'«Жил на Урале мастер Данила…»',fact:'Сказ о мастере, мечтавшем создать каменный цветок.'},
+];
+const TEXT_A = 'Однажды воробей нашёл на дороге хлебную корку. Обрадовался воробей и понёс корку в гнездо. Вдруг налетела ворона и отняла у воробья корку. Заплакал воробей. Тут прилетели его друзья — синицы. Вместе они прогнали ворону и вернули корку воробью. Так воробей понял, что вместе друзья справятся с любой бедой.';
+const TEXT_B = 'Ёж — небольшой зверёк, тело которого покрыто иголками. Днём ёж спит в норе или под кустом, а ночью выходит на охоту. Питается ёж жуками, гусеницами, червями, а иногда и змеями. К зиме ёж накапливает жир и засыпает до весны. Иголки защищают ежа от врагов: свернувшись в клубок, он прячет лапки и мордочку.';
+const TEXT_C = 'Однажды мальчик Витя гулял в парке и нашёл на дорожке птенца. Птенец выпал из гнезда и не мог взлететь. Витя бережно поднял птенца и посадил его на нижнюю ветку дерева, где было гнездо. Вскоре прилетела птица-мама и накормила птенца. Витя понял, что нужно помогать тем, кто попал в беду.';
+const TEXT_D = 'Берёза — самое распространённое дерево в России. Ствол берёзы белый с чёрными полосками. Листья берёзы мелкие, зелёные, а осенью они становятся жёлтыми. Весной берёза даёт сладкий берёзовый сок, который очень полезен. Из коры берёзы — бересты — в старину делали посуду и писали письма.';
+const TEXT_E = 'Однажды зимой мальчик Саша лепил снеговика. Рядом с ним сидел маленький щенок и дрожал от холода. Саша пожалел щенка, снял с себя шарф и укутал его. Дома Саша рассказал о щенке маме, и они решили взять его к себе. Так у Саши появился верный друг.';
+const TEXT_F = 'Дятел — лесной доктор. Своим крепким клювом он выдалбливает в стволах деревьев дырочки и достаёт оттуда вредных насекомых. Дятлы живут в лесах и питаются жуками-короедами. Поэтому дятла называют санитаром леса: он спасает деревья от вредителей.';
+const TEXT_G = 'У Насти был котёнок Пушок. Однажды Пушок забрался на высокое дерево и не мог слезть. Настя плакала и звала котёнка. Сосед дядя Коля принёс лестницу, залез на дерево и снял Пушка. С тех пор котёнок больше не лазил так высоко.';
+const TEXT_H = 'Подсолнух — растение с большим жёлтым цветком. Он всегда поворачивает свою головку к солнцу. Из семян подсолнуха делают подсолнечное масло. Подсолнух — очень полезное растение: его семечки любят и люди, и птицы.';
+
+const VPR = [
+  { id:'genre', icon:'🏷️', title:'Жанры', desc:'Определи жанр произведения', questions:[
+    {q:'К какому жанру относится «Сказка о рыбаке и рыбке»?',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Это волшебная авторская сказка А. С. Пушкина.'},
+    {q:'«Лебедь, Рак и Щука» — это…',opts:['Басня','Сказка','Рассказ','Стихотворение'],ans:0,why:'Басня И. А. Крылова с моралью.'},
+    {q:'«Мороз и солнце; день чудесный!» — это…',opts:['Стихотворение','Басня','Рассказ','Сказка'],ans:0,why:'Это стихотворение А. С. Пушкина «Зимнее утро».'},
+    {q:'«Филипок» Л. Н. Толстого — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Это рассказ (быль) о мальчике Филиппе.'},
+    {q:'«Ильины три поездочки» — это…',opts:['Былина','Сказка','Рассказ','Басня'],ans:0,why:'Былина о богатыре Илье Муромце.'},
+    {q:'«Житие Сергия Радонежского» — это…',opts:['Житие','Сказка','Басня','Былина'],ans:0,why:'Житие — рассказ о жизни святого.'},
+    {q:'«Семь раз отмерь — один раз отрежь» — это…',opts:['Пословица','Загадка','Скороговорка','Считалка'],ans:0,why:'Это народная мудрость — пословица.'},
+    {q:'«Без рук, без ног, а ворота отворяет» — это…',opts:['Загадка','Пословица','Сказка','Басня'],ans:0,why:'Загадка (отгадка — ветер).'},
+    {q:'«Шла Саша по шоссе и сосала сушку» — это…',opts:['Скороговорка','Загадка','Пословица','Считалка'],ans:0,why:'Скороговорка для тренировки произношения.'},
+    {q:'«Стоит в поле теремок…» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Русская народная сказка.'},
+    {q:'«Уж сколько раз твердили миру, что лесть гнусна, вредна…» — это…',opts:['Басня','Стихотворение','Сказка','Рассказ'],ans:0,why:'Басня И. А. Крылова «Ворона и Лисица».'},
+    {q:'«Буря мглою небо кроет…» — это…',opts:['Стихотворение','Басня','Сказка','Рассказ'],ans:0,why:'Стихотворение А. С. Пушкина «Зимний вечер».'},
+    {q:'«Как мужик убрал камень» — это…',opts:['Быль (рассказ)','Сказка','Басня','Былина'],ans:0,why:'Это быль — рассказ о том, что было в жизни.'},
+    {q:'«Конёк-горбунок» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Литературная сказка П. П. Ершова в стихах.'},
+    {q:'«Гадкий утёнок» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Авторская сказка Г. Х. Андерсена.'},
+    {q:'«Мартышка и Очки» — это…',opts:['Басня','Сказка','Рассказ','Стихотворение'],ans:0,why:'Басня И. А. Крылова.'},
+    {q:'«Стрижонок Скрип» — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ В. П. Астафьева о природе.'},
+    {q:'«Уж тает снег, бегут ручьи…» — это…',opts:['Стихотворение','Рассказ','Сказка','Басня'],ans:0,why:'Это стихотворение о весне.'},
+    {q:'«Ашик-Кериб» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Турецкая сказка, записанная М. Ю. Лермонтовым.'},
+    {q:'«Прыжок» Л. Н. Толстого — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Это рассказ о мальчике на корабле.'},
+    {q:'«Сказка о потерянном времени» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Авторская сказка Е. Л. Шварца.'},
+    {q:'«По щучьему велению» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Русская народная сказка.'},
+    {q:'«У лукоморья дуб зелёный…» — это…',opts:['Стихотворение','Сказка','Басня','Рассказ'],ans:0,why:'Отрывок из поэмы А. С. Пушкина «Руслан и Людмила».'},
+    {q:'«Кот в сапогах» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Зарубежная сказка Ш. Перро.'},
+    {q:'«Репка» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Русская народная сказка.'},
+    {q:'«Красная Шапочка» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Зарубежная сказка Ш. Перро.'},
+    {q:'«Двенадцать месяцев» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Сказка-пьеса С. Я. Маршака.'},
+    {q:'«Царевна-лягушка» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Русская народная сказка.'},
+    {q:'«Маша и медведь» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Русская народная сказка.'},
+    {q:'«Три медведя» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Сказка в обработке Л. Н. Толстого.'},
+    {q:'«Волк и семеро козлят» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Русская народная сказка.'},
+    {q:'«Аленький цветочек» — это…',opts:['Сказка','Рассказ','Басня','Былина'],ans:0,why:'Сказка С. Т. Аксакова.'},
+    {q:'«Серебряное копытце» — это…',opts:['Сказка','Рассказ','Басня','Стихотворение'],ans:0,why:'Сказ П. П. Бажова.'},
+    {q:'«Листопад» («Лес, точно терем расписной…») — это…',opts:['Стихотворение','Сказка','Басня','Рассказ'],ans:0,why:'Стихотворение И. А. Бунина.'},
+    {q:'«Берёза» («Белая берёза под моим окном…») — это…',opts:['Стихотворение','Сказка','Басня','Рассказ'],ans:0,why:'Стихотворение С. А. Есенина.'},
+    {q:'«Котёнок» Л. Н. Толстого — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Рассказ (быль) о котёнке.'},
+    {q:'«Старый дед и внучек» — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ (быль) Л. Н. Толстого.'},
+    {q:'«Лев и собачка» — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Рассказ (быль) Л. Н. Толстого.'},
+    {q:'«Барбос и Жулька» — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ А. И. Куприна.'},
+    {q:'«Приёмыш» — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Рассказ Д. Н. Мамина-Сибиряка.'},
+    {q:'«Ёлка» М. Зощенко — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ о детстве.'},
+    {q:'«Волшебное слово» — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Рассказ В. А. Осеевой.'},
+    {q:'«Тайное становится явным» — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ В. Ю. Драгунского.'},
+    {q:'«Ворона и Лисица» — это…',opts:['Басня','Сказка','Рассказ','Стихотворение'],ans:0,why:'Басня И. А. Крылова.'},
+    {q:'«Квартет» — это…',opts:['Басня','Сказка','Рассказ','Былина'],ans:0,why:'Басня И. А. Крылова.'},
+    {q:'«Слон и Моська» — это…',opts:['Басня','Сказка','Рассказ','Стихотворение'],ans:0,why:'Басня И. А. Крылова.'},
+    {q:'«Илья Муромец и Соловей-разбойник» — это…',opts:['Былина','Сказка','Басня','Рассказ'],ans:0,why:'Былина о богатыре Илье Муромце.'},
+    {q:'«Добрыня Никитич» — это…',opts:['Былина','Сказка','Басня','Рассказ'],ans:0,why:'Былина о богатыре Добрыне.'},
+    {q:'«Живая шляпа» — это…',opts:['Рассказ','Сказка','Басня','Былина'],ans:0,why:'Рассказ Н. Н. Носова.'},
+    {q:'«Чук и Гек» — это…',opts:['Рассказ','Сказка','Басня','Стихотворение'],ans:0,why:'Рассказ (повесть) А. П. Гайдара.'}
+  ]},
+  { id:'means', icon:'🎨', title:'Средства выразительности', desc:'Эпитет, сравнение, олицетворение', questions:[
+    {q:'Какое средство выразительности: «Лес, точно терем расписной»?',opts:['Сравнение','Эпитет','Олицетворение','Рифма'],ans:0,why:'Есть слово «точно» — это сравнение.'},
+    {q:'Найди эпитет: «Черёмуха душистая с весною расцвела»',opts:['душистая','расцвела','весною','черёмуха'],ans:0,why:'Эпитет — яркое образное определение («душистая»).'},
+    {q:'Какое средство: «Ночевала тучка золотая на груди утёса-великана»?',opts:['Олицетворение','Сравнение','Эпитет','Повтор'],ans:0,why:'Тучка «ночевала» — неживому приписаны действия живого.'},
+    {q:'Найди сравнение: «Глаза, как звёзды, ясные»',opts:['как звёзды','ясные','глаза','звёзды'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Какое средство: «Улыбнулись сонные берёзки»?',opts:['Олицетворение','Эпитет','Сравнение','Метафора'],ans:0,why:'Берёзки «улыбнулись» — как живые.'},
+    {q:'Найди эпитет: «В синем море»',opts:['синем','море','в','волны'],ans:0,why:'Эпитет — образное определение «синее».'},
+    {q:'Какое средство: «Золотая осень»?',opts:['Эпитет','Олицетворение','Сравнение','Метафора'],ans:0,why:'«Золотая» — яркое образное определение (эпитет).'},
+    {q:'Найди олицетворение: «Ветер поёт свою песню»',opts:['ветер поёт','свою','песню','ветер'],ans:0,why:'Ветер «поёт» — как человек.'},
+    {q:'Какое средство: «Спит черёмуха в белой накидке»?',opts:['Олицетворение','Сравнение','Эпитет','Повтор'],ans:0,why:'Черёмуха «спит» — как живое существо.'},
+    {q:'Найди эпитет: «Красна девица»',opts:['красна','девица','идёт','поёт'],ans:0,why:'«Красна» (красивая) — образное народное определение.'},
+    {q:'Какое средство: «Туча, как большой слон»?',opts:['Сравнение','Олицетворение','Эпитет','Рифма'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Найди олицетворение: «Солнышко улыбнулось из-за туч»',opts:['солнышко улыбнулось','из-за туч','солнышко','туч'],ans:0,why:'Солнышко «улыбнулось» — как человек.'},
+    {q:'Какое средство: «Серебряные росы»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Серебряные» — яркое образное определение (эпитет).'},
+    {q:'Найди эпитет: «Пушистый снег»',opts:['пушистый','снег','лежит','идёт'],ans:0,why:'Эпитет — образное определение «пушистый».'},
+    {q:'Какое средство: «Зима злится, ворчит»?',opts:['Олицетворение','Сравнение','Эпитет','Повтор'],ans:0,why:'Зима «злится, ворчит» — как живое существо.'},
+    {q:'Найди сравнение: «Снег, как белая скатерть»',opts:['как белая скатерть','белая','снег','скатерть'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Какое средство: «Ветер воет»?',opts:['Олицетворение','Эпитет','Сравнение','Метафора'],ans:0,why:'Ветер «воет» — как живое существо.'},
+    {q:'Найди эпитет: «Дремучий лес»',opts:['дремучий','лес','стоит','шумит'],ans:0,why:'Эпитет — образное определение «дремучий».'},
+    {q:'Какое средство: «Щёки, как маков цвет»?',opts:['Сравнение','Олицетворение','Эпитет','Рифма'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Найди олицетворение: «Мороз рисует на окнах узоры»',opts:['мороз рисует','на окнах','узоры','мороз'],ans:0,why:'Мороз «рисует» — как человек.'},
+    {q:'Какое средство: «Золотая рожь»?',opts:['Эпитет','Олицетворение','Сравнение','Метафора'],ans:0,why:'«Золотая» — яркое образное определение (эпитет).'},
+    {q:'Найди сравнение: «Кораблик, словно лебедь»',opts:['словно лебедь','кораблик','плывёт','белый'],ans:0,why:'Сравнение с помощью слова «словно».'},
+    {q:'Какое средство: «Кудрявая берёзка»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Кудрявая» — образное определение (эпитет).'},
+    {q:'Найди эпитет: «Ласковое солнышко»',opts:['ласковое','солнышко','светит','утром'],ans:0,why:'Эпитет — «ласковое».'},
+    {q:'Какое средство: «Звёздочки ясные»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Ясные» — образное определение.'},
+    {q:'Найди сравнение: «Снег блестит, как серебро»',opts:['как серебро','блестит','снег','зимой'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Какое средство: «Лес проснулся»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Лес «проснулся» — как живой.'},
+    {q:'Найди олицетворение: «Речка бежит и поёт»',opts:['речка бежит и поёт','речка','поёт','бежит'],ans:0,why:'Речка «бежит и поёт» — как живая.'},
+    {q:'Какое средство: «Солнце, как золотой шар»?',opts:['Сравнение','Эпитет','Олицетворение','Рифма'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Найди эпитет: «Седой туман»',opts:['седой','туман','стелется','утром'],ans:0,why:'Эпитет — «седой».'},
+    {q:'Какое средство: «Осень-художница»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Осень названа художницей — как живая.'},
+    {q:'Найди сравнение: «Облака, точно вата»',opts:['точно вата','облака','плывут','вата'],ans:0,why:'Сравнение с помощью слова «точно».'},
+    {q:'Найди эпитет: «Серебристый иней»',opts:['серебристый','иней','лежит','утром'],ans:0,why:'Эпитет — «серебристый».'},
+    {q:'Какое средство: «Вьюга злится»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Вьюга «злится» — как живая.'},
+    {q:'Какое средство: «Щёчки румяные»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Румяные» — образное определение.'},
+    {q:'Найди сравнение: «Трава, словно ковёр»',opts:['словно ковёр','трава','ковёр','зелёная'],ans:0,why:'Сравнение с помощью слова «словно».'},
+    {q:'Какое средство: «Мороз-воевода»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Мороз назван воеводой — как человек.'},
+    {q:'Найди эпитет: «Могучий дуб»',opts:['могучий','дуб','стоит','вековой'],ans:0,why:'Эпитет — «могучий».'},
+    {q:'Какое средство: «Звезда, как алмаз»?',opts:['Сравнение','Эпитет','Олицетворение','Рифма'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Найди олицетворение: «Дождик плачет за окном»',opts:['дождик плачет','за окном','дождик','капли'],ans:0,why:'Дождик «плачет» — как человек.'},
+    {q:'Какое средство: «Тёплое море»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Тёплое» — образное определение.'},
+    {q:'Какое средство: «Гром грохочет и сердится»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Гром «сердится» — как человек.'},
+    {q:'Найди сравнение: «Глаза блестят, будто звёзды»',opts:['будто звёзды','глаза','блестят','звёзды'],ans:0,why:'Сравнение с помощью слова «будто».'},
+    {q:'Найди эпитет: «Весёлый ручеёк»',opts:['весёлый','ручеёк','бежит','журчит'],ans:0,why:'Эпитет — «весёлый».'},
+    {q:'Какое средство: «Колокольчики звенят и радуются»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Колокольчики «радуются» — как живые.'},
+    {q:'Какое средство: «Белый, как мел»?',opts:['Сравнение','Эпитет','Олицетворение','Рифма'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Найди эпитет: «Золотистая пшеница»',opts:['золотистая','пшеница','растёт','колосится'],ans:0,why:'Эпитет — «золотистая».'},
+    {q:'Какое средство: «Ночь накрыла землю»?',opts:['Олицетворение','Эпитет','Сравнение','Рифма'],ans:0,why:'Ночь «накрыла» — как живая.'},
+    {q:'Найди сравнение: «Красный, как рак»',opts:['как рак','красный','рак','цвет'],ans:0,why:'Сравнение с помощью слова «как».'},
+    {q:'Какое средство: «Гордый орёл»?',opts:['Эпитет','Олицетворение','Сравнение','Рифма'],ans:0,why:'«Гордый» — образное определение.'}
+  ]},
+  { id:'proverb', icon:'💬', title:'Пословицы', desc:'Продолжи и объясни пословицу', questions:[
+    {q:'Продолжи: «Без труда не вытащишь…»',opts:['…и рыбку из пруда','…и зайца из леса','…и птицу из неба','…и ягодку с куста'],ans:0,why:'Без труда ничего не добьёшься.'},
+    {q:'Продолжи: «Семь раз отмерь — …»',opts:['один раз отрежь','два раза подумай','три раза проверь','десять раз скажи'],ans:0,why:'Сначала всё хорошо обдумай, потом делай.'},
+    {q:'Продолжи: «Поспешишь — …»',opts:['людей насмешишь','дело завершишь','всех обгонишь','мало успеешь'],ans:0,why:'Торопливость приводит к ошибкам.'},
+    {q:'Продолжи: «Слово не воробей, …»',opts:['вылетит — не поймаешь','улетит далеко','вернётся назад','запоёт весной'],ans:0,why:'Сказанное слово обратно не вернёшь.'},
+    {q:'Продолжи: «Делу — время, …»',opts:['потехе — час','а отдыху — час','а сну — час','а игре — час'],ans:0,why:'Работе — больше времени, а развлечениям — меньше.'},
+    {q:'Продолжи: «Что посеешь, …»',opts:['то и пожнёшь','то и соберёшь','то и продашь','то и сожжёшь'],ans:0,why:'Как потрудишься, такой и будет результат.'},
+    {q:'Продолжи: «Ученье — свет, …»',opts:['а неученье — тьма','а лень — беда','а труд — награда','а книга — друг'],ans:0,why:'Учение даёт знания (свет), а без него — незнание (тьма).'},
+    {q:'Продолжи: «Не имей сто рублей, …»',opts:['а имей сто друзей','а имей сто конфет','а имей сто игрушек','а имей сто рублей'],ans:0,why:'Друзья дороже денег.'},
+    {q:'Продолжи: «Сделал дело — …»',opts:['гуляй смело','отдыхай долго','спи спокойно','иди домой'],ans:0,why:'Сначала выполни работу, потом отдыхай.'},
+    {q:'Продолжи: «Терпенье и труд …»',opts:['всё перетрут','всё переспорят','всё перескажут','всё перепишут'],ans:0,why:'Упорный труд и терпение всё преодолеют.'},
+    {q:'Объясни смысл: «Как аукнется, так и откликнется»',opts:['Как отнесёшься к другим, так и к тебе отнесутся','Эхо в лесу','Нужно громко кричать','Отклик важнее слова'],ans:0,why:'Пословица о том, что добро возвращается добром.'},
+    {q:'Объясни смысл: «Старый друг лучше новых двух»',opts:['Проверенный друг надёжнее','Нужно много друзей','Старые друзья скучные','Друзей не бывает много'],ans:0,why:'Старый, проверенный друг ценнее.'},
+    {q:'Продолжи: «За двумя зайцами погонишься — …»',opts:['ни одного не поймаешь','обоих поймаешь','одного поймаешь','устанешь'],ans:0,why:'Не берись сразу за много дел.'},
+    {q:'Продолжи: «Труд человека кормит, …»',opts:['а лень портит','а отдых красит','а сон лечит','а игра веселит'],ans:0,why:'Труд приносит достаток, а лень — вред.'},
+    {q:'Продолжи: «Береги нос в…»',opts:['большой мороз','сильный дождь','жаркий день','тёмный лес'],ans:0,why:'В сильный мороз нужно беречь нос от холода.'},
+    {q:'Продолжи: «Грамоте учиться — …»',opts:['всегда пригодится','никогда не поздно','очень тяжело','скучно'],ans:0,why:'Умение читать и писать нужно всегда.'},
+    {q:'Продолжи: «Дело мастера…»',opts:['боится','ждёт','красит','кормит'],ans:0,why:'Умелый мастер любую работу сделает хорошо.'},
+    {q:'Продолжи: «Не рой другому яму — …»',opts:['сам в неё попадёшь','сам не заметишь','друг поможет','глубже будет'],ans:0,why:'Не делай зла другому, иначе пострадаешь сам.'},
+    {q:'Продолжи: «Семеро одного…»',opts:['не ждут','не боятся','не любят','не слышат'],ans:0,why:'Все не будут ждать одного опоздавшего.'},
+    {q:'Объясни смысл: «Под лежачий камень вода не течёт»',opts:['Без труда ничего не получится','Камень лежит на дне','Вода течёт вниз','Камень мешает воде'],ans:0,why:'Если ничего не делать, ничего и не добьёшься.'},
+    {q:'Продолжи: «Нет друга — ищи, а нашёл — …»',opts:['береги','радуйся','забудь','прячь'],ans:0,why:'Дружбу нужно беречь.'},
+    {q:'Продолжи: «Век живи — …»',opts:['век учись','век гуляй','век трудись','век радуйся'],ans:0,why:'Учиться нужно всю жизнь.'},
+    {q:'Объясни смысл: «Волков бояться — в лес не ходить»',opts:['Боишься трудностей — не берись за дело','В лесу много волков','Волки опасны','Лес далеко'],ans:0,why:'Если боишься трудностей, лучше не начинать дело.'},
+    {q:'Продолжи: «Маленькое дело лучше…»',opts:['большого безделья','большой работы','всякой игры','любого отдыха'],ans:0,why:'Лучше сделать хоть немного, чем ничего не делать.'},
+    {q:'Продолжи: «Скучен день до вечера, …»',opts:['коли делать нечего','коли солнце светит','коли дождь идёт','коли гости пришли'],ans:0,why:'Без дела день тянется долго и скучно.'},
+    {q:'Продолжи: «Любишь кататься — …»',opts:['люби и саночки возить','люби и отдыхать','люби и спать','люби и гулять'],ans:0,why:'За удовольствие нужно и потрудиться.'},
+    {q:'Продолжи: «Хлеб — всему …»',opts:['голова','начало','конец','друг'],ans:0,why:'Хлеб — самое главное в жизни.'},
+    {q:'Продолжи: «Не красна изба углами, …»',opts:['а красна пирогами','а бела стенами','а светла окнами','а полна гостями'],ans:0,why:'Дом ценят не за вид, а за гостеприимство.'},
+    {q:'Продолжи: «При солнышке тепло, …»',opts:['при матери добро','при печке жарко','при дожде сыро','при ветре холодно'],ans:0,why:'Рядом с мамой всегда хорошо и спокойно.'},
+    {q:'Продолжи: «Нет милее дружка, …»',opts:['чем родная матушка','чем соседская кошка','чем сладкий пирожок','чем новая игрушка'],ans:0,why:'Мама — самый близкий человек.'},
+    {q:'Продолжи: «Родина — мать, …»',opts:['умей за неё постоять','умей её накормить','умей её нарядить','умей её похвалить'],ans:0,why:'Родину нужно любить и защищать.'},
+    {q:'Продолжи: «Один в поле …»',opts:['не воин','не пахарь','не сторож','не работник'],ans:0,why:'В одиночку трудно справиться с большим делом.'},
+    {q:'Продолжи: «Тише едешь — …»',opts:['дальше будешь','скорее приедешь','меньше увидишь','дольше простоишь'],ans:0,why:'Не торопись — тогда добьёшься большего.'},
+    {q:'Продолжи: «Не зная броду, …»',opts:['не суйся в воду','не ходи в лес','не лезь на гору','не плыви далеко'],ans:0,why:'Сначала узнай, что к чему, потом делай.'},
+    {q:'Объясни смысл: «Яблоко от яблони недалеко падает»',opts:['Дети похожи на своих родителей','Яблоки падают вниз','Яблоня высокая','Нужно сажать яблони'],ans:0,why:'Дети перенимают черты своих родителей.'},
+    {q:'Продолжи: «Первый блин …»',opts:['комом','сладкий','горячий','большой'],ans:0,why:'С первого раза не всё получается хорошо.'},
+    {q:'Объясни смысл: «Шила в мешке не утаишь»',opts:['Тайное всегда станет явным','Мешок порвётся','Шило острое','Нужен другой мешок'],ans:0,why:'Тайну нельзя скрыть навсегда.'},
+    {q:'Продолжи: «Готовь сани летом, …»',opts:['а телегу зимой','а коня весной','а лодку осенью','а дрова к морозу'],ans:0,why:'Готовься к делу заранее.'},
+    {q:'Продолжи: «Кто не работает, …»',opts:['тот не ест','тот не спит','тот не отдыхает','тот не учится'],ans:0,why:'Без труда не будет и результата.'},
+    {q:'Продолжи: «В тесноте, да …»',opts:['не в обиде','не в ссоре','не в голоде','не в холоде'],ans:0,why:'Лучше вместе, пусть даже тесно, но дружно.'},
+    {q:'Продолжи: «Повторенье — …»',opts:['мать ученья','отец труда','друг успеха','враг лени'],ans:0,why:'Повторение помогает лучше запомнить.'},
+    {q:'Объясни смысл: «Слово — серебро, молчание — золото»',opts:['Иногда лучше промолчать','Нужно говорить громко','Слова дорогие','Молчание скучно'],ans:0,why:'Иногда промолчать лучше, чем сказать лишнее.'},
+    {q:'Продолжи: «Ум хорошо, …»',opts:['а два лучше','а три хуже','а руки нужнее','а ноги быстрее'],ans:0,why:'Вместе с другими можно найти лучшее решение.'},
+    {q:'Продолжи: «За правое дело …»',opts:['стой смело','берись умело','плати дорого','отвечай скоро'],ans:0,why:'За справедливое дело нужно бороться.'},
+    {q:'Продолжи: «Доброе слово …»',opts:['и кошке приятно','и птице слышно','и делу полезно','и другу знакомо'],ans:0,why:'Ласковое слово приятно каждому.'},
+    {q:'Продолжи: «Что написано пером, …»',opts:['не вырубишь топором','не сотрёшь рукой','не смоешь водой','не скроешь плащом'],ans:0,why:'Написанное (данное слово) уже не изменишь.'},
+    {q:'Объясни смысл: «В гостях хорошо, а дома лучше»',opts:['Дома всегда лучше всего','Гости любят сладости','Дом нужно украшать','В гости ходить весело'],ans:0,why:'Родной дом — самое лучшее место.'},
+    {q:'Продолжи: «Дорога ложка …»',opts:['к обеду','к ужину','к завтраку','к празднику'],ans:0,why:'Всё хорошо вовремя.'},
+    {q:'Продолжи: «Рыбак рыбака …»',opts:['видит издалека','ждёт на берегу','любит за уху','зовёт на реку'],ans:0,why:'Похожие люди быстро узнают друг друга.'},
+    {q:'Объясни смысл: «Не всё то золото, что блестит»',opts:['Не всё красивое ценно','Золото не блестит','Блеск — признак золота','Золото тяжёлое'],ans:0,why:'Не стоит судить о ценности только по виду.'}
+  ]},
+  { id:'author', icon:'✍️', title:'Авторы и произведения', desc:'Кто что написал', questions:[
+    {q:'Кто написал «Сказку о царе Салтане»?',opts:['А. С. Пушкин','Л. Н. Толстой','К. И. Чуковский','С. Я. Маршак'],ans:0,why:'Авторская сказка Александра Сергеевича Пушкина.'},
+    {q:'Кто написал «Конёк-горбунок»?',opts:['П. П. Ершов','А. С. Пушкин','И. А. Крылов','Н. Н. Носов'],ans:0,why:'Сказку в стихах написал Пётр Ершов.'},
+    {q:'Кто автор басни «Лебедь, Рак и Щука»?',opts:['И. А. Крылов','Л. Н. Толстой','А. С. Пушкин','М. Ю. Лермонтов'],ans:0,why:'Иван Андреевич Крылов — великий баснописец.'},
+    {q:'Кто написал «Филипок»?',opts:['Л. Н. Толстой','А. П. Чехов','Н. Н. Носов','М. М. Пришвин'],ans:0,why:'Рассказ Льва Николаевича Толстого.'},
+    {q:'Кто написал «Гадкий утёнок»?',opts:['Г. Х. Андерсен','Ш. Перро','Братья Гримм','А. Милн'],ans:0,why:'Сказка датского писателя Андерсена.'},
+    {q:'Кто написал «Дядя Стёпа»?',opts:['С. В. Михалков','А. Л. Барто','С. Я. Маршак','К. И. Чуковский'],ans:0,why:'Поэму о милиционере написал Сергей Михалков.'},
+    {q:'Кто написал «Аленький цветочек»?',opts:['С. Т. Аксаков','П. П. Бажов','В. Ф. Одоевский','А. С. Пушкин'],ans:0,why:'Сказку записал Сергей Тимофеевич Аксаков.'},
+    {q:'Кто написал «Серебряное копытце»?',opts:['П. П. Бажов','С. Т. Аксаков','Е. Л. Шварц','В. М. Гаршин'],ans:0,why:'Уральский сказ Павла Петровича Бажова.'},
+    {q:'Кто написал «Муха-Цокотуха»?',opts:['К. И. Чуковский','С. Я. Маршак','А. Л. Барто','С. В. Михалков'],ans:0,why:'Сказку в стихах написал Корней Чуковский.'},
+    {q:'Кто автор «Мойдодыра»?',opts:['К. И. Чуковский','А. С. Пушкин','Н. Н. Носов','Э. Н. Успенский'],ans:0,why:'Мойдодыра придумал Корней Чуковский.'},
+    {q:'Кто написал «Малыш и Карлсон»?',opts:['Астрид Линдгрен','Алан Милн','Джанни Родари','Льюис Кэрролл'],ans:0,why:'Шведская писательница Астрид Линдгрен.'},
+    {q:'Что написал И. А. Крылов?',opts:['Басни','Сказки','Рассказы','Былины'],ans:0,why:'Крылов знаменит своими баснями.'},
+    {q:'Кто написал «Чебурашка»?',opts:['Э. Н. Успенский','Н. Н. Носов','В. Ю. Драгунский','С. Я. Маршак'],ans:0,why:'Чебурашку придумал Эдуард Успенский.'},
+    {q:'Кто написал «Приключения Незнайки»?',opts:['Н. Н. Носов','Э. Н. Успенский','В. Ю. Драгунский','К. И. Чуковский'],ans:0,why:'Незнайку придумал Николай Носов.'},
+    {q:'Кто написал «Золушку»?',opts:['Ш. Перро','Г. Х. Андерсен','Братья Гримм','А. Милн'],ans:0,why:'Сказку о Золушке написал Шарль Перро.'},
+    {q:'Кто написал «Рикки-Тикки-Тави»?',opts:['Р. Киплинг','Дж. Родари','А. Линдгрен','Л. Кэрролл'],ans:0,why:'Рассказ о мангусте написал Редьярд Киплинг.'},
+    {q:'Кто написал «Крокодил Гена»?',opts:['Э. Н. Успенский','Н. Н. Носов','С. Я. Маршак','С. В. Михалков'],ans:0,why:'Крокодила Гену придумал Эдуард Успенский.'},
+    {q:'Кто написал сказку «Морозко»?',opts:['Народ (народная сказка)','А. С. Пушкин','П. П. Бажов','С. Я. Маршак'],ans:0,why:'«Морозко» — русская народная сказка, её создал народ.'},
+    {q:'Кто написал «Двенадцать месяцев»?',opts:['С. Я. Маршак','К. И. Чуковский','А. Л. Барто','С. В. Михалков'],ans:0,why:'Пьесу-сказку написал Самуил Маршак.'},
+    {q:'Кто написал «Стрижонок Скрип»?',opts:['В. П. Астафьев','М. М. Пришвин','В. В. Бианки','Е. И. Чарушин'],ans:0,why:'Рассказ о стрижонке написал Виктор Астафьев.'},
+    {q:'Кто написал басню «Мартышка и Очки»?',opts:['И. А. Крылов','Л. Н. Толстой','А. С. Пушкин','М. Ю. Лермонтов'],ans:0,why:'Басню написал Иван Андреевич Крылов.'},
+    {q:'Кто написал «Барбос и Жулька»?',opts:['А. И. Куприн','Л. Н. Толстой','А. П. Чехов','М. М. Пришвин'],ans:0,why:'Рассказ о собаках написал Александр Куприн.'},
+    {q:'Кто написал «Ёлка»?',opts:['М. М. Зощенко','А. П. Чехов','Н. Н. Носов','В. Ю. Драгунский'],ans:0,why:'Рассказ о детстве написал Михаил Зощенко.'},
+    {q:'Кто написал «Приёмыш»?',opts:['Д. Н. Мамин-Сибиряк','П. П. Бажов','С. Т. Аксаков','В. Ф. Одоевский'],ans:0,why:'Рассказ о лебеде написал Дмитрий Мамин-Сибиряк.'},
+    {q:'Кто написал «Алиса в Стране чудес»?',opts:['Л. Кэрролл','А. Линдгрен','Дж. Родари','А. де Сент-Экзюпери'],ans:0,why:'Сказку об Алисе написал Льюис Кэрролл.'},
+    {q:'Кто написал «Дюймовочку»?',opts:['Г. Х. Андерсен','Ш. Перро','Братья Гримм','А. Милн'],ans:0,why:'Сказку о крошечной девочке написал Ганс Христиан Андерсен.'},
+    {q:'Кто написал «Репку»?',opts:['Народ (народная сказка)','А. С. Пушкин','Л. Н. Толстой','С. Я. Маршак'],ans:0,why:'«Репка» — русская народная сказка.'},
+    {q:'Кто написал «Колобок»?',opts:['Народ (народная сказка)','К. И. Чуковский','Н. Н. Носов','С. В. Михалков'],ans:0,why:'«Колобок» — русская народная сказка.'},
+    {q:'Кто написал «Теремок»?',opts:['Народ (народная сказка)','А. С. Пушкин','Л. Н. Толстой','С. Я. Маршак'],ans:0,why:'«Теремок» — русская народная сказка.'},
+    {q:'Кто написал «Гуси-лебеди»?',opts:['Народ (народная сказка)','К. И. Чуковский','А. Л. Барто','С. В. Михалков'],ans:0,why:'«Гуси-лебеди» — русская народная сказка.'},
+    {q:'Кто написал «Лиса и журавль»?',opts:['Народ (народная сказка)','И. А. Крылов','Л. Н. Толстой','А. С. Пушкин'],ans:0,why:'«Лиса и журавль» — русская народная сказка.'},
+    {q:'Кто написал «Царевну-лягушку»?',opts:['Народ (народная сказка)','А. С. Пушкин','П. П. Бажов','С. Я. Маршак'],ans:0,why:'«Царевна-лягушка» — русская народная сказка.'},
+    {q:'Кто написал «Маша и медведь»?',opts:['Народ (народная сказка)','Л. Н. Толстой','К. И. Чуковский','С. В. Михалков'],ans:0,why:'«Маша и медведь» — русская народная сказка.'},
+    {q:'Кто обработал сказку «Три медведя»?',opts:['Л. Н. Толстой','А. С. Пушкин','И. А. Крылов','Н. Н. Носов'],ans:0,why:'Сказку «Три медведя» обработал Лев Толстой.'},
+    {q:'Кто написал «Стрекоза и Муравей»?',opts:['И. А. Крылов','А. С. Пушкин','Л. Н. Толстой','М. Ю. Лермонтов'],ans:0,why:'Басню написал Иван Андреевич Крылов.'},
+    {q:'Кто написал «Слон и Моська»?',opts:['И. А. Крылов','Л. Н. Толстой','А. С. Пушкин','С. Я. Маршак'],ans:0,why:'Басню написал Иван Андреевич Крылов.'},
+    {q:'Кто написал «Квартет»?',opts:['И. А. Крылов','Н. Н. Носов','А. С. Пушкин','К. И. Чуковский'],ans:0,why:'Басню написал Иван Андреевич Крылов.'},
+    {q:'Кто написал «Прыжок»?',opts:['Л. Н. Толстой','А. П. Чехов','Н. Н. Носов','М. М. Пришвин'],ans:0,why:'Рассказ о мальчике написал Лев Толстой.'},
+    {q:'Кто написал «Акула»?',opts:['Л. Н. Толстой','А. П. Чехов','М. М. Пришвин','В. Ю. Драгунский'],ans:0,why:'Рассказ написал Лев Николаевич Толстой.'},
+    {q:'Кто написал «Лев и собачка»?',opts:['Л. Н. Толстой','А. И. Куприн','А. П. Чехов','М. М. Пришвин'],ans:0,why:'Рассказ написал Лев Николаевич Толстой.'},
+    {q:'Кто написал «Горные вершины»?',opts:['М. Ю. Лермонтов','А. С. Пушкин','С. А. Есенин','Ф. И. Тютчев'],ans:0,why:'Стихотворение написал Михаил Лермонтов.'},
+    {q:'Кто написал «Утёс»?',opts:['М. Ю. Лермонтов','А. С. Пушкин','И. А. Бунин','А. А. Фет'],ans:0,why:'Стихотворение написал Михаил Лермонтов.'},
+    {q:'Кто написал «Мальчики»?',opts:['А. П. Чехов','Л. Н. Толстой','Н. Н. Носов','В. Ю. Драгунский'],ans:0,why:'Рассказ написал Антон Павлович Чехов.'},
+    {q:'Кто написал «Волшебное слово»?',opts:['В. А. Осеева','А. Л. Барто','Н. Н. Носов','В. Ю. Драгунский'],ans:0,why:'Рассказ написала Валентина Осеева.'},
+    {q:'Кто написал «Тайное становится явным»?',opts:['В. Ю. Драгунский','Н. Н. Носов','А. П. Чехов','М. М. Зощенко'],ans:0,why:'Рассказ написал Виктор Драгунский.'},
+    {q:'Кто написал «Лягушку-путешественницу»?',opts:['В. М. Гаршин','П. П. Бажов','В. Ф. Одоевский','С. Т. Аксаков'],ans:0,why:'Сказку написал Всеволод Гаршин.'},
+    {q:'Кто написал «Мороз Иванович»?',opts:['В. Ф. Одоевский','П. П. Бажов','С. Т. Аксаков','Е. Л. Шварц'],ans:0,why:'Сказку написал Владимир Одоевский.'},
+    {q:'Кто написал «Городок в табакерке»?',opts:['В. Ф. Одоевский','С. Т. Аксаков','П. П. Бажов','В. М. Гаршин'],ans:0,why:'Сказку написал Владимир Одоевский.'},
+    {q:'Кто написал «Сказку о жабе и розе»?',opts:['В. М. Гаршин','В. Ф. Одоевский','С. Т. Аксаков','П. П. Бажов'],ans:0,why:'Сказку написал Всеволод Гаршин.'},
+    {q:'Кто написал «Сказку о потерянном времени»?',opts:['Е. Л. Шварц','С. Я. Маршак','К. И. Чуковский','С. В. Михалков'],ans:0,why:'Сказку написал Евгений Шварц.'}
+  ]},
+  { id:'hero', icon:'🦸', title:'Герои произведений', desc:'Узнай героя по описанию', questions:[
+    {q:'Кто говорил: «Спокойствие, только спокойствие!»?',opts:['Карлсон','Буратино','Незнайка','Чебурашка'],ans:0,why:'Так говорил Карлсон из книги А. Линдгрен.'},
+    {q:'Кто говорил: «Кири-ку-ку. Царствуй, лёжа на боку!»?',opts:['Золотой петушок','Царь Салтан','Балда','Елисей'],ans:0,why:'Слова золотого петушка из сказки Пушкина.'},
+    {q:'Из какого произведения герой Балда?',opts:['Сказка о попе и работнике его Балде','Сказка о царе Салтане','Руслан и Людмила','Сказка о золотом петушке'],ans:0,why:'Балда — работник у попа.'},
+    {q:'Кто такой Буратино?',opts:['Деревянный мальчик','Железный дровосек','Луковый мальчик','Снежный человечек'],ans:0,why:'Буратино — деревянный мальчик из сказки А. Толстого.'},
+    {q:'Кто такая Дюймовочка?',opts:['Девочка размером с дюйм','Русалочка','Снежная королева','Царевна-лягушка'],ans:0,why:'Дюймовочка — крошечная девочка из сказки Андерсена.'},
+    {q:'Как звали мальчика из рассказа «Волшебное слово»?',opts:['Павлик','Петя','Филипп','Дениска'],ans:0,why:'Героя рассказа В. Осеевой зовут Павлик.'},
+    {q:'Кто говорил: «Дурачина ты, простофиля!»?',opts:['Старуха','Старик','Золотая рыбка','Царь'],ans:0,why:'Так старуха бранила старика в сказке о рыбаке и рыбке.'},
+    {q:'Кто такая Пеппи Длинныйчулок?',opts:['Самая сильная девочка','Маленькая принцесса','Девочка-русалка','Ученица волшебника'],ans:0,why:'Пеппи — самая сильная девочка в мире (А. Линдгрен).'},
+    {q:'Из какого произведения Чиполлино?',opts:['Приключения Чиполлино','Приключения Буратино','Волшебник Изумрудного города','Маугли'],ans:0,why:'Чиполлино — мальчик-луковка из сказки Дж. Родари.'},
+    {q:'Кто вырос среди волков и говорил: «Мы с тобой одной крови»?',opts:['Маугли','Тарзан','Том Сойер','Электроник'],ans:0,why:'Маугли — герой Р. Киплинга, выросший среди волков.'},
+    {q:'Как звали мальчика из «Сказки о потерянном времени»?',opts:['Петя Зубов','Володя','Дениска','Павлик'],ans:0,why:'Героя сказки Е. Шварца зовут Петя Зубов.'},
+    {q:'Кто унёс братца в сказке «Гуси-лебеди»?',opts:['Гуси-лебеди','Серый волк','Баба-яга','Ветер'],ans:0,why:'Гуси-лебеди унесли братца на крыльях.'},
+    {q:'Кто говорил: «По щучьему велению, по моему хотению»?',opts:['Емеля','Иван-царевич','Балда','Старик'],ans:0,why:'Так говорил Емеля из русской народной сказки.'},
+    {q:'Кто такой Дядя Стёпа?',opts:['Милиционер-великан','Лётчик','Почтальон','Повар'],ans:0,why:'Дядя Стёпа — великан, который работает милиционером.'},
+    {q:'Кто такая Снегурочка?',opts:['Девочка из снега','Дочь царя','Русалка','Сестра Деда Мороза'],ans:0,why:'Снегурочку слепили из снега старик со старухой.'},
+    {q:'Кто получил волшебный цветик-семицветик?',opts:['Девочка Женя','Мальчик Петя','Красная Шапочка','Дюймовочка'],ans:0,why:'В сказке В. Катаева волшебный цветок достался девочке Жене.'},
+    {q:'Кто такой Незнайка?',opts:['Коротышка, который ничего не знал','Волшебник','Доктор','Художник'],ans:0,why:'Незнайка — коротышка из сказки Н. Носова.'},
+    {q:'Кто говорил: «Свет мой, зеркальце! скажи…»?',opts:['Злая царица','Царевна','Белоснежка','Красная Шапочка'],ans:0,why:'С зеркальцем разговаривала злая царица-мачеха.'},
+    {q:'Кто такой Карлсон?',opts:['Человечек с пропеллером','Волшебный гном','Летающий мальчик','Говорящий пёс'],ans:0,why:'Карлсон — человечек с пропеллером на спине.'},
+    {q:'Кто такая Красная Шапочка?',opts:['Девочка, которая шла к бабушке','Сестра Золушки','Принцесса','Русалочка'],ans:0,why:'Красная Шапочка несла пирожки своей бабушке.'},
+    {q:'Кто помогал Ивану-царевичу в сказке?',opts:['Серый волк','Медведь','Лиса','Журавль'],ans:0,why:'Волшебный серый волк помогал Ивану-царевичу.'},
+    {q:'Кто такой доктор Айболит?',opts:['Добрый доктор, лечил зверей','Учитель','Почтальон','Садовник'],ans:0,why:'Айболит — доктор, который лечил зверей.'},
+    {q:'Кто такой Колобок?',opts:['Круглый хлебец, убежавший от деда и бабы','Лесной зверёк','Волшебный мячик','Пирожок с капустой'],ans:0,why:'Колобок — румяный хлебец из народной сказки.'},
+    {q:'Кто такая Курочка Ряба?',opts:['Курочка, снёсшая золотое яичко','Утка','Гусыня','Птичка-синичка'],ans:0,why:'Курочка Ряба снесла золотое яичко.'},
+    {q:'Кто такой Илья Муромец?',opts:['Русский богатырь','Царь','Купец','Волшебник'],ans:0,why:'Илья Муромец — герой русских былин.'},
+    {q:'Кто такая Баба-яга?',opts:['Злая старуха-волшебница','Добрая фея','Царевна','Няня'],ans:0,why:'Баба-яга — злая волшебница из русских сказок.'},
+    {q:'Кто такой Кощей Бессмертный?',opts:['Злой волшебник','Добрый царь','Храбрый воин','Весёлый шут'],ans:0,why:'Кощей — злой волшебник из русских сказок.'},
+    {q:'Кто такая Алёнушка?',opts:['Сестрица Иванушки','Жена богатыря','Дочь царя','Волшебница'],ans:0,why:'Алёнушка — сестрица из сказки «Сестрица Алёнушка и братец Иванушка».'},
+    {q:'Кто такой Иванушка?',opts:['Братец Алёнушки','Сын царя','Пастух','Охотник'],ans:0,why:'Иванушка — братец Алёнушки, ставший козлёночком.'},
+    {q:'Кто такой Карабас-Барабас?',opts:['Злой владелец кукольного театра','Добрый доктор','Весёлый клоун','Богатый купец'],ans:0,why:'Карабас-Барабас — злодей из сказки о Буратино.'},
+    {q:'Кто такая черепаха Тортилла?',opts:['Подарила Буратино золотой ключик','Жила в пустыне','Учила Буратино читать','Сторожила театр'],ans:0,why:'Тортилла подарила Буратино золотой ключик.'},
+    {q:'Кто такой доктор Пилюлькин?',opts:['Врач из Цветочного города','Учитель','Повар','Музыкант'],ans:0,why:'Пилюлькин — врач коротышек в сказке о Незнайке.'},
+    {q:'Кто такой Гена?',opts:['Крокодил','Слон','Медведь','Лев'],ans:0,why:'Гена — крокодил из сказки «Крокодил Гена».'},
+    {q:'Кто такая Снежная королева?',opts:['Холодная волшебница','Добрая фея','Царица цветов','Лесная дева'],ans:0,why:'Снежная королева — волшебница из сказки Андерсена.'},
+    {q:'Кто такая Русалочка?',opts:['Дочь морского царя','Дочь лесного царя','Принцесса','Фея'],ans:0,why:'Русалочка — морская царевна из сказки Андерсена.'},
+    {q:'Кто такая Золушка?',opts:['Девушка, потерявшая хрустальную туфельку','Принцесса','Королева','Фея'],ans:0,why:'Золушка потеряла хрустальную туфельку на балу.'},
+    {q:'Кто такой Винни-Пух?',opts:['Медвежонок, любящий мёд','Зайчик','Тигрёнок','Ослик'],ans:0,why:'Винни-Пух — плюшевый медвежонок, который любит мёд.'},
+    {q:'Кто такая Золотая рыбка?',opts:['Волшебная рыбка, исполнявшая желания','Простая рыбка','Золотой карп','Русалка'],ans:0,why:'Золотая рыбка исполняла желания в сказке Пушкина.'},
+    {q:'Кто говорил: «Ребята, давайте жить дружно!»?',opts:['Кот Леопольд','Кот Матроскин','Крокодил Гена','Чебурашка'],ans:0,why:'Эту фразу говорил добрый кот Леопольд.'},
+    {q:'Кто говорил: «Я тучка, тучка, тучка, а вовсе не медведь»?',opts:['Винни-Пух','Карлсон','Буратино','Незнайка'],ans:0,why:'Так пел Винни-Пух, притворяясь тучкой.'},
+    {q:'Кто говорил: «Откройся, Сизам!»?',opts:['Али-Баба','Синдбад','Аладдин','Буратино'],ans:0,why:'Эти слова открывали пещеру в сказке про Али-Бабу.'},
+    {q:'Кто такой Чебурашка?',opts:['Неизвестный зверёк из ящика с апельсинами','Котёнок','Щенок','Зайчонок'],ans:0,why:'Чебурашку нашли в ящике с апельсинами.'},
+    {q:'Кто такой почтальон Печкин?',opts:['Почтальон из Простоквашино','Врач','Учитель','Шофёр'],ans:0,why:'Печкин — почтальон из деревни Простоквашино.'},
+    {q:'Кто такой кот Матроскин?',opts:['Кот из Простоквашино','Кот учёный','Кот в сапогах','Кот Леопольд'],ans:0,why:'Матроскин — хозяйственный кот из Простоквашино.'},
+    {q:'Кто такая Мальвина?',opts:['Девочка с голубыми волосами','Принцесса','Фея','Кукла'],ans:0,why:'Мальвина — девочка с голубыми волосами из сказки о Буратино.'},
+    {q:'Кто такой Пьеро?',opts:['Грустный поэт','Весёлый клоун','Храбрый воин','Доктор'],ans:0,why:'Пьеро — грустный поэт из сказки о Буратино.'},
+    {q:'Кто такая Серая Шейка?',opts:['Уточка, которая не улетела на юг','Гусыня','Лебедь','Курица'],ans:0,why:'Серая Шейка — уточка со сломанным крылом.'},
+    {q:'Кто такой Рикки-Тикки-Тави?',opts:['Храбрый мангуст','Волк','Лис','Барсук'],ans:0,why:'Рикки-Тикки-Тави — храбрый мангуст из рассказа Киплинга.'},
+    {q:'Кто такая Жар-птица?',opts:['Волшебная птица с золотыми перьями','Сова','Орлица','Лебедь'],ans:0,why:'Жар-птица — волшебная птица с золотыми перьями.'},
+    {q:'Кто такая Царевна-лебедь?',opts:['Царевна, превращавшаяся в лебедя','Русалка','Снежная королева','Фея'],ans:0,why:'Царевна-лебедь — героиня «Сказки о царе Салтане».'}
+  ]},
+  { id:'text', icon:'📖', title:'Работа с текстом', desc:'Прочитай отрывок и ответь', block:true, questions:[
+    {p:'Жил старик со своею старухой у самого синего моря. Они жили в ветхой землянке ровно тридцать лет и три года. Старик ловил неводом рыбу, а старуха пряла свою пряжу.',q:'Где жили старик со старухой?',opts:['У синего моря','В густом лесу','В большом городе','В горах'],ans:0,why:'В тексте: «у самого синего моря».'},
+    {p:'Жил старик со своею старухой у самого синего моря. Они жили в ветхой землянке ровно тридцать лет и три года. Старик ловил неводом рыбу, а старуха пряла свою пряжу.',q:'Чем занимался старик?',opts:['Ловил неводом рыбу','Пахал землю','Сторожил дом','Варил кашу'],ans:0,why:'«Старик ловил неводом рыбу».'},
+    {p:'Жил старик со своею старухой у самого синего моря. Они жили в ветхой землянке ровно тридцать лет и три года. Старик ловил неводом рыбу, а старуха пряла свою пряжу.',q:'Что делала старуха?',opts:['Пряла пряжу','Пекла пироги','Собирала ягоды','Стирала бельё'],ans:0,why:'«Старуха пряла свою пряжу».'},
+    {p:'Жил старик со своею старухой у самого синего моря. Они жили в ветхой землянке ровно тридцать лет и три года. Старик ловил неводом рыбу, а старуха пряла свою пряжу.',q:'Из какого произведения этот отрывок?',opts:['Сказка о рыбаке и рыбке','Сказка о царе Салтане','Руслан и Людмила','Зимний вечер'],ans:0,why:'Это начало «Сказки о рыбаке и рыбке» А. С. Пушкина.'},
+    {p:'Мальчик Филипп очень хотел пойти в школу. Но мать не пускала его: он был ещё мал. Однажды, когда бабушка уснула, Филипп надел шапку и пошёл в школу. По дороге его лаяли собаки, но он не испугался.',q:'Чего очень хотел Филипп?',opts:['Пойти в школу','Пойти на речку','Купить игрушку','Пойти в лес'],ans:0,why:'«Филипп очень хотел пойти в школу».'},
+    {p:'Мальчик Филипп очень хотел пойти в школу. Но мать не пускала его: он был ещё мал. Однажды, когда бабушка уснула, Филипп надел шапку и пошёл в школу. По дороге его лаяли собаки, но он не испугался.',q:'Почему мать не пускала Филиппа в школу?',opts:['Он был ещё мал','Он был болен','Он не хотел','Было холодно'],ans:0,why:'«Он был ещё мал».'},
+    {p:'Мальчик Филипп очень хотел пойти в школу. Но мать не пускала его: он был ещё мал. Однажды, когда бабушка уснула, Филипп надел шапку и пошёл в школу. По дороге его лаяли собаки, но он не испугался.',q:'Кто лаял на Филиппа по дороге?',opts:['Собаки','Гуси','Козы','Коты'],ans:0,why:'«По дороге его лаяли собаки».'},
+    {p:'Мальчик Филипп очень хотел пойти в школу. Но мать не пускала его: он был ещё мал. Однажды, когда бабушка уснула, Филипп надел шапку и пошёл в школу. По дороге его лаяли собаки, но он не испугался.',q:'Какой характер у Филиппа?',opts:['Смелый и упорный','Трусливый','Ленивый','Жадный'],ans:0,why:'Он не испугался собак и пошёл к своей цели.'},
+    {p:'Белая берёза под моим окном\nПринакрылась снегом, точно серебром.\nНа пушистых ветках снежною каймой\nРаспустились кисти белой бахромой.',q:'С чем сравнивается снег на берёзе?',opts:['С серебром','С золотом','С молоком','С сахаром'],ans:0,why:'«Принакрылась снегом, точно серебром» — сравнение.'},
+    {p:'Белая берёза под моим окном\nПринакрылась снегом, точно серебром.\nНа пушистых ветках снежною каймой\nРаспустились кисти белой бахромой.',q:'Какое дерево описано в стихотворении?',opts:['Берёза','Ель','Дуб','Рябина'],ans:0,why:'«Белая берёза под моим окном».'},
+    {p:'Белая берёза под моим окном\nПринакрылась снегом, точно серебром.\nНа пушистых ветках снежною каймой\nРаспустились кисти белой бахромой.',q:'Кто автор этого стихотворения?',opts:['С. А. Есенин','А. С. Пушкин','И. А. Бунин','Ф. И. Тютчев'],ans:0,why:'Это стихотворение Сергея Есенина «Берёза».'},
+    {p:'Белая берёза под моим окном\nПринакрылась снегом, точно серебром.\nНа пушистых ветках снежною каймой\nРаспустились кисти белой бахромой.',q:'Какое время года описано в стихотворении?',opts:['Зима','Весна','Лето','Осень'],ans:0,why:'Берёза принакрылась снегом — это зима.'},
+    {p:'Лиса и журавль подружились. Вот раз лиса пригласила журавля в гости и наварила манной каши. Размазала она кашу по тарелке и угощает журавля. Журавль стук-стук носом по тарелке — ничего не может съесть, а лиса всё слизала. Потом журавль позвал лису в гости и налил окрошку в кувшин с узким горлышком. Лиса вертится вокруг кувшина, а съесть ничего не может. С тех пор дружба у лисы с журавлём врозь.',q:'Кого лиса пригласила в гости?',opts:['Журавля','Зайца','Медведя','Волка'],ans:0,why:'В тексте: «лиса пригласила журавля в гости».'},
+    {p:'Лиса и журавль подружились. Вот раз лиса пригласила журавля в гости и наварила манной каши. Размазала она кашу по тарелке и угощает журавля. Журавль стук-стук носом по тарелке — ничего не может съесть, а лиса всё слизала. Потом журавль позвал лису в гости и налил окрошку в кувшин с узким горлышком. Лиса вертится вокруг кувшина, а съесть ничего не может. С тех пор дружба у лисы с журавлём врозь.',q:'В чём лиса подала кашу?',opts:['В тарелке','В кувшине','В кастрюле','В чашке'],ans:0,why:'Лиса «размазала кашу по тарелке».'},
+    {p:'Лиса и журавль подружились. Вот раз лиса пригласила журавля в гости и наварила манной каши. Размазала она кашу по тарелке и угощает журавля. Журавль стук-стук носом по тарелке — ничего не может съесть, а лиса всё слизала. Потом журавль позвал лису в гости и налил окрошку в кувшин с узким горлышком. Лиса вертится вокруг кувшина, а съесть ничего не может. С тех пор дружба у лисы с журавлём врозь.',q:'В чём журавль подал окрошку?',opts:['В кувшине с узким горлышком','В тарелке','В бочке','В ведре'],ans:0,why:'Журавль «налил окрошку в кувшин с узким горлышком».'},
+    {p:'Лиса и журавль подружились. Вот раз лиса пригласила журавля в гости и наварила манной каши. Размазала она кашу по тарелке и угощает журавля. Журавль стук-стук носом по тарелке — ничего не может съесть, а лиса всё слизала. Потом журавль позвал лису в гости и налил окрошку в кувшин с узким горлышком. Лиса вертится вокруг кувшина, а съесть ничего не может. С тех пор дружба у лисы с журавлём врозь.',q:'Что случилось с дружбой лисы и журавля?',opts:['Дружба закончилась','Они помирились','Они уехали','Они стали соседями'],ans:0,why:'«С тех пор дружба у лисы с журавлём врозь».'},
+    {p:'Сова — ночная хищная птица. Днём она спит в дупле, а ночью вылетает на охоту. У совы большие глаза, которые хорошо видят в темноте, и острый слух. Питается сова мышами, поэтому приносит большую пользу. Мягкие перья помогают сове летать бесшумно.',q:'Когда сова вылетает на охоту?',opts:['Ночью','Днём','Утром','Вечером'],ans:0,why:'«Ночью вылетает на охоту».'},
+    {p:'Сова — ночная хищная птица. Днём она спит в дупле, а ночью вылетает на охоту. У совы большие глаза, которые хорошо видят в темноте, и острый слух. Питается сова мышами, поэтому приносит большую пользу. Мягкие перья помогают сове летать бесшумно.',q:'Где сова спит днём?',opts:['В дупле','В гнезде','На ветке','В поле'],ans:0,why:'«Днём она спит в дупле».'},
+    {p:'Сова — ночная хищная птица. Днём она спит в дупле, а ночью вылетает на охоту. У совы большие глаза, которые хорошо видят в темноте, и острый слух. Питается сова мышами, поэтому приносит большую пользу. Мягкие перья помогают сове летать бесшумно.',q:'Чем питается сова?',opts:['Мышами','Ягодами','Рыбой','Травой'],ans:0,why:'«Питается сова мышами».'},
+    {p:'Сова — ночная хищная птица. Днём она спит в дупле, а ночью вылетает на охоту. У совы большие глаза, которые хорошо видят в темноте, и острый слух. Питается сова мышами, поэтому приносит большую пользу. Мягкие перья помогают сове летать бесшумно.',q:'Что помогает сове летать бесшумно?',opts:['Мягкие перья','Большие глаза','Острый слух','Длинный хвост'],ans:0,why:'«Мягкие перья помогают сове летать бесшумно».'},
+    {p:'Лев спал. Маленькая мышь пробежала по его спине и разбудила льва. Лев поймал мышь и хотел её съесть. Мышь попросила отпустить её и обещала помочь. Лев засмеялся, но отпустил мышь. Скоро охотники поймали льва и связали его верёвками. Мышь перегрызла верёвки и освободила льва. Так маленькая мышь спасла большого льва.',q:'Кто разбудил льва?',opts:['Мышь','Заяц','Ёж','Птица'],ans:0,why:'«Маленькая мышь пробежала по его спине и разбудила льва».'},
+    {p:'Лев спал. Маленькая мышь пробежала по его спине и разбудила льва. Лев поймал мышь и хотел её съесть. Мышь попросила отпустить её и обещала помочь. Лев засмеялся, но отпустил мышь. Скоро охотники поймали льва и связали его верёвками. Мышь перегрызла верёвки и освободила льва. Так маленькая мышь спасла большого льва.',q:'Что сделал лев с мышью?',opts:['Отпустил её','Съел её','Посадил в клетку','Прогнал её'],ans:0,why:'«Лев засмеялся, но отпустил мышь».'},
+    {p:'Лев спал. Маленькая мышь пробежала по его спине и разбудила льва. Лев поймал мышь и хотел её съесть. Мышь попросила отпустить её и обещала помочь. Лев засмеялся, но отпустил мышь. Скоро охотники поймали льва и связали его верёвками. Мышь перегрызла верёвки и освободила льва. Так маленькая мышь спасла большого льва.',q:'Как мышь спасла льва?',opts:['Перегрызла верёвки','Позвала зверей','Принесла еду','Разбудила охотников'],ans:0,why:'«Мышь перегрызла верёвки и освободила льва».'},
+    {p:'Лев спал. Маленькая мышь пробежала по его спине и разбудила льва. Лев поймал мышь и хотел её съесть. Мышь попросила отпустить её и обещала помочь. Лев засмеялся, но отпустил мышь. Скоро охотники поймали льва и связали его верёвками. Мышь перегрызла верёвки и освободила льва. Так маленькая мышь спасла большого льва.',q:'Какая пословица подходит к тексту?',opts:['Маленький, да удаленький','Семь раз отмерь — один раз отрежь','Поспешишь — людей насмешишь','Ученье — свет'],ans:0,why:'Даже маленькая мышь смогла помочь большому льву.'},
+    {p:'Муравей спустился к ручью напиться. Волна смыла его, и муравей стал тонуть. Голубка бросила ему ветку. Муравей забрался на ветку и спасся. Потом охотник расставил сеть, чтобы поймать голубку. Муравей укусил охотника за ногу. Охотник вскрикнул и выпустил сеть, а голубка улетела.',q:'Что случилось с муравьём у ручья?',opts:['Волна смыла его','Он уснул','Он нашёл еду','Он утонул'],ans:0,why:'«Волна смыла его, и муравей стал тонуть».'},
+    {p:'Муравей спустился к ручью напиться. Волна смыла его, и муравей стал тонуть. Голубка бросила ему ветку. Муравей забрался на ветку и спасся. Потом охотник расставил сеть, чтобы поймать голубку. Муравей укусил охотника за ногу. Охотник вскрикнул и выпустил сеть, а голубка улетела.',q:'Кто спас муравья?',opts:['Голубка','Лягушка','Рыба','Охотник'],ans:0,why:'«Голубка бросила ему ветку».'},
+    {p:'Муравей спустился к ручью напиться. Волна смыла его, и муравей стал тонуть. Голубка бросила ему ветку. Муравей забрался на ветку и спасся. Потом охотник расставил сеть, чтобы поймать голубку. Муравей укусил охотника за ногу. Охотник вскрикнул и выпустил сеть, а голубка улетела.',q:'Как муравей спас голубку?',opts:['Укусил охотника','Прогнал сеть','Позвал птиц','Принёс ветку'],ans:0,why:'«Муравей укусил охотника за ногу».'},
+    {p:'Муравей спустился к ручью напиться. Волна смыла его, и муравей стал тонуть. Голубка бросила ему ветку. Муравей забрался на ветку и спасся. Потом охотник расставил сеть, чтобы поймать голубку. Муравей укусил охотника за ногу. Охотник вскрикнул и выпустил сеть, а голубка улетела.',q:'Какая главная мысль текста?',opts:['Добро возвращается добром','В лесу опасно','Муравьи сильные','Голуби быстрые'],ans:0,why:'Голубка спасла муравья, а муравей — голубку.'},
+    {p:'Голодная лиса увидела виноград, который висел высоко на лозе. Лиса прыгала, прыгала, но не смогла достать ни одной ягоды. Тогда она сказала: «Виноград ещё зелёный!» — и ушла.',q:'Что увидела лиса?',opts:['Виноград','Яблоки','Груши','Сливы'],ans:0,why:'В тексте: «увидела виноград».'},
+    {p:'Голодная лиса увидела виноград, который висел высоко на лозе. Лиса прыгала, прыгала, но не смогла достать ни одной ягоды. Тогда она сказала: «Виноград ещё зелёный!» — и ушла.',q:'Почему лиса не достала виноград?',opts:['Он висел высоко','Он был зелёным','Он был горьким','Он был спрятан'],ans:0,why:'Виноград «висел высоко на лозе».'},
+    {p:'Голодная лиса увидела виноград, который висел высоко на лозе. Лиса прыгала, прыгала, но не смогла достать ни одной ягоды. Тогда она сказала: «Виноград ещё зелёный!» — и ушла.',q:'Что сказала лиса, уходя?',opts:['Виноград ещё зелёный','Виноград горький','Виноград пропал','Виноград маленький'],ans:0,why:'Лиса сказала: «Виноград ещё зелёный!»'},
+    {p:'Голодная лиса увидела виноград, который висел высоко на лозе. Лиса прыгала, прыгала, но не смогла достать ни одной ягоды. Тогда она сказала: «Виноград ещё зелёный!» — и ушла.',q:'Чему учит эта история?',opts:['Лучше честно признать неудачу','Нужно больше прыгать','Виноград невкусный','Лиса голодная'],ans:0,why:'Лиса оправдала себя, потому что не смогла достать виноград.'},
+    {p:'Синица — небольшая птичка с жёлтой грудкой. Летом она питается насекомыми, а зимой прилетает к жилью человека. Синицы очень полезны: они уничтожают вредителей садов и огородов. Зимой синиц нужно подкармливать семечками и несолёным салом.',q:'Какого цвета грудка у синицы?',opts:['Жёлтая','Красная','Синяя','Белая'],ans:0,why:'«Синица — птичка с жёлтой грудкой».'},
+    {p:'Синица — небольшая птичка с жёлтой грудкой. Летом она питается насекомыми, а зимой прилетает к жилью человека. Синицы очень полезны: они уничтожают вредителей садов и огородов. Зимой синиц нужно подкармливать семечками и несолёным салом.',q:'Чем синица питается летом?',opts:['Насекомыми','Ягодами','Хлебом','Семечками'],ans:0,why:'«Летом она питается насекомыми».'},
+    {p:'Синица — небольшая птичка с жёлтой грудкой. Летом она питается насекомыми, а зимой прилетает к жилью человека. Синицы очень полезны: они уничтожают вредителей садов и огородов. Зимой синиц нужно подкармливать семечками и несолёным салом.',q:'Почему синицы полезны?',opts:['Уничтожают вредителей','Красиво поют','Строят гнёзда','Украшают сад'],ans:0,why:'Они «уничтожают вредителей садов и огородов».'},
+    {p:'Синица — небольшая птичка с жёлтой грудкой. Летом она питается насекомыми, а зимой прилетает к жилью человека. Синицы очень полезны: они уничтожают вредителей садов и огородов. Зимой синиц нужно подкармливать семечками и несолёным салом.',q:'Чем нужно подкармливать синиц зимой?',opts:['Семечками и салом','Хлебом и конфетами','Мясом и рыбой','Ягодами и фруктами'],ans:0,why:'Зимой синиц подкармливают «семечками и несолёным салом».'},
+    {p:'Муравей — маленькое, но очень сильное насекомое. Он может поднять груз, который в несколько раз тяжелее его самого. Муравьи живут большими семьями в муравейниках. Каждый муравей выполняет свою работу: одни строят дом, другие добывают пищу.',q:'Какое насекомое муравей?',opts:['Маленькое, но сильное','Большое и слабое','Маленькое и слабое','Большое и сильное'],ans:0,why:'«Муравей — маленькое, но очень сильное насекомое».'},
+    {p:'Муравей — маленькое, но очень сильное насекомое. Он может поднять груз, который в несколько раз тяжелее его самого. Муравьи живут большими семьями в муравейниках. Каждый муравей выполняет свою работу: одни строят дом, другие добывают пищу.',q:'Где живут муравьи?',opts:['В муравейниках','В дуплах','В норах','В гнёздах'],ans:0,why:'«Муравьи живут большими семьями в муравейниках».'},
+    {p:'Муравей — маленькое, но очень сильное насекомое. Он может поднять груз, который в несколько раз тяжелее его самого. Муравьи живут большими семьями в муравейниках. Каждый муравей выполняет свою работу: одни строят дом, другие добывают пищу.',q:'Как живут муравьи в семье?',opts:['Каждый выполняет свою работу','Все спят','Все дерутся','Все кочуют'],ans:0,why:'«Каждый муравей выполняет свою работу».'},
+    {p:'Муравей — маленькое, но очень сильное насекомое. Он может поднять груз, который в несколько раз тяжелее его самого. Муравьи живут большими семьями в муравейниках. Каждый муравей выполняет свою работу: одни строят дом, другие добывают пищу.',q:'К какому типу относится текст?',opts:['Научно-популярный','Художественный (сказка)','Стихотворение','Загадка'],ans:0,why:'Текст сообщает научные сведения о муравьях.'},
+    {p:'Ромашка — полевой цветок с белыми лепестками и жёлтой серединкой. Она цветёт всё лето. Ромашку называют лекарственным растением: из её цветков заваривают чай, который помогает при простуде. Ромашка растёт на лугах и по краям дорог.',q:'Какие лепестки у ромашки?',opts:['Белые','Красные','Синие','Жёлтые'],ans:0,why:'У ромашки «белые лепестки».'},
+    {p:'Ромашка — полевой цветок с белыми лепестками и жёлтой серединкой. Она цветёт всё лето. Ромашку называют лекарственным растением: из её цветков заваривают чай, который помогает при простуде. Ромашка растёт на лугах и по краям дорог.',q:'Какого цвета серединка у ромашки?',opts:['Жёлтая','Белая','Зелёная','Красная'],ans:0,why:'У ромашки «жёлтая серединка».'},
+    {p:'Ромашка — полевой цветок с белыми лепестками и жёлтой серединкой. Она цветёт всё лето. Ромашку называют лекарственным растением: из её цветков заваривают чай, который помогает при простуде. Ромашка растёт на лугах и по краям дорог.',q:'От чего помогает чай из ромашки?',opts:['От простуды','От дождя','От мороза','От жары'],ans:0,why:'Чай из ромашки «помогает при простуде».'},
+    {p:'Ромашка — полевой цветок с белыми лепестками и жёлтой серединкой. Она цветёт всё лето. Ромашку называют лекарственным растением: из её цветков заваривают чай, который помогает при простуде. Ромашка растёт на лугах и по краям дорог.',q:'Где растёт ромашка?',opts:['На лугах и по краям дорог','В воде','На деревьях','В пустыне'],ans:0,why:'«Ромашка растёт на лугах и по краям дорог».'},
+    {p:'Встретились в лесу ёжик и заяц. Заяц стал хвастаться, что он самый быстрый. Ёжик предложил устроить соревнование по бегу. Хитрый ёжик поставил на другом конце поляны свою жену, похожую на него. Когда заяц прибежал к финишу, там уже сидел «ёжик». Так ёжик перехитрил хвастливого зайца.',q:'Чем хвастался заяц?',opts:['Что он самый быстрый','Что он самый сильный','Что он самый умный','Что он самый красивый'],ans:0,why:'Заяц «хвастался, что он самый быстрый».'},
+    {p:'Встретились в лесу ёжик и заяц. Заяц стал хвастаться, что он самый быстрый. Ёжик предложил устроить соревнование по бегу. Хитрый ёжик поставил на другом конце поляны свою жену, похожую на него. Когда заяц прибежал к финишу, там уже сидел «ёжик». Так ёжик перехитрил хвастливого зайца.',q:'Что предложил ёжик?',opts:['Соревнование по бегу','Соревнование по прыжкам','Игру в прятки','Обмен норами'],ans:0,why:'Ёжик «предложил устроить соревнование по бегу».'},
+    {p:'Встретились в лесу ёжик и заяц. Заяц стал хвастаться, что он самый быстрый. Ёжик предложил устроить соревнование по бегу. Хитрый ёжик поставил на другом конце поляны свою жену, похожую на него. Когда заяц прибежал к финишу, там уже сидел «ёжик». Так ёжик перехитрил хвастливого зайца.',q:'Как ёжик перехитрил зайца?',opts:['Поставил на финише жену','Спрятался в кустах','Побежал быстрее','Позвал друзей'],ans:0,why:'Ёжик «поставил на другом конце поляны свою жену».'},
+    {p:'Встретились в лесу ёжик и заяц. Заяц стал хвастаться, что он самый быстрый. Ёжик предложил устроить соревнование по бегу. Хитрый ёжик поставил на другом конце поляны свою жену, похожую на него. Когда заяц прибежал к финишу, там уже сидел «ёжик». Так ёжик перехитрил хвастливого зайца.',q:'Чему учит сказка?',opts:['Не хвастайся и не недооценивай других','Нужно быстро бегать','Заяц сильнее','Ёжик медленный'],ans:0,why:'Хвастовство и недооценка других привели зайца к поражению.'},
+    {p:'Скворец — перелётная птица. Весной скворцы прилетают к нам и селятся в скворечниках. Скворцы уничтожают много вредных насекомых, поэтому люди строят для них домики. Осенью скворцы собираются в стаи и улетают в тёплые края.',q:'Когда скворцы прилетают к нам?',opts:['Весной','Зимой','Летом','Осенью'],ans:0,why:'«Весной скворцы прилетают к нам».'},
+    {p:'Скворец — перелётная птица. Весной скворцы прилетают к нам и селятся в скворечниках. Скворцы уничтожают много вредных насекомых, поэтому люди строят для них домики. Осенью скворцы собираются в стаи и улетают в тёплые края.',q:'Где селятся скворцы?',opts:['В скворечниках','В дуплах','В гнёздах','В норах'],ans:0,why:'Скворцы «селятся в скворечниках».'},
+    {p:'Скворец — перелётная птица. Весной скворцы прилетают к нам и селятся в скворечниках. Скворцы уничтожают много вредных насекомых, поэтому люди строят для них домики. Осенью скворцы собираются в стаи и улетают в тёплые края.',q:'Почему люди строят скворцам домики?',opts:['Скворцы уничтожают вредителей','Скворцы красиво поют','Скворцы дают пух','Скворцы несут яйца'],ans:0,why:'«Скворцы уничтожают много вредных насекомых».'},
+    {p:'Скворец — перелётная птица. Весной скворцы прилетают к нам и селятся в скворечниках. Скворцы уничтожают много вредных насекомых, поэтому люди строят для них домики. Осенью скворцы собираются в стаи и улетают в тёплые края.',q:'Что делают скворцы осенью?',opts:['Улетают в тёплые края','Строят гнёзда','Впадают в спячку','Меняют оперение'],ans:0,why:'«Осенью скворцы улетают в тёплые края».'}
+  ]},
+  { id:'match', icon:'🧩', title:'Собери пословицу', desc:'Соедини половинки пословиц', questions:[
+    {type:'match',pairs:[{a:'Без труда',b:'не вытащишь и рыбку из пруда'},{a:'Семь раз отмерь',b:'один раз отрежь'},{a:'Поспешишь',b:'людей насмешишь'},{a:'Слово не воробей',b:'вылетит — не поймаешь'},{a:'Делу время',b:'потехе час'}]},
+    {type:'match',pairs:[{a:'Что посеешь',b:'то и пожнёшь'},{a:'Ученье — свет',b:'а неученье — тьма'},{a:'Не имей сто рублей',b:'а имей сто друзей'},{a:'Сделал дело',b:'гуляй смело'},{a:'Терпенье и труд',b:'всё перетрут'}]},
+    {type:'match',pairs:[{a:'За двумя зайцами погонишься',b:'ни одного не поймаешь'},{a:'Труд человека кормит',b:'а лень портит'},{a:'Как аукнется',b:'так и откликнется'},{a:'Старый друг',b:'лучше новых двух'},{a:'Береги платье снову',b:'а честь смолоду'}]},
+    {type:'match',pairs:[{a:'Любишь кататься',b:'люби и саночки возить'},{a:'Под лежачий камень',b:'вода не течёт'},{a:'Волков бояться',b:'в лес не ходить'},{a:'Глаза боятся',b:'а руки делают'},{a:'Скучен день до вечера',b:'коли делать нечего'}]},
+    {type:'match',pairs:[{a:'Нет друга — ищи',b:'а нашёл — береги'},{a:'Грамоте учиться',b:'всегда пригодится'},{a:'Дело мастера',b:'боится'},{a:'Век живи',b:'век учись'},{a:'Семеро одного',b:'не ждут'}]},
+    {type:'match',pairs:[{a:'Не рой другому яму',b:'сам в неё попадёшь'},{a:'Береги нос',b:'в большой мороз'},{a:'Маленькое дело',b:'лучше большого безделья'},{a:'Друзья познаются',b:'в беде'},{a:'Красна птица пером',b:'а человек умом'}]},
+    {type:'match',pairs:[{a:'Скучен день до вечера',b:'коли делать нечего'},{a:'Тише едешь',b:'дальше будешь'},{a:'Один в поле',b:'не воин'},{a:'Хлеб — всему',b:'голова'},{a:'Повторенье —',b:'мать ученья'}]},
+    {type:'match',pairs:[{a:'Готовь сани летом',b:'а телегу зимой'},{a:'Не зная броду',b:'не суйся в воду'},{a:'Первый блин',b:'комом'},{a:'Что написано пером',b:'не вырубишь топором'},{a:'Ум хорошо',b:'а два лучше'}]},
+    {type:'match',pairs:[{a:'Рыбак рыбака',b:'видит издалека'},{a:'Дорога ложка',b:'к обеду'},{a:'В тесноте',b:'да не в обиде'},{a:'Доброе слово',b:'и кошке приятно'},{a:'За правое дело',b:'стой смело'}]},
+    {type:'match',pairs:[{a:'Не красна изба углами',b:'а красна пирогами'},{a:'При солнышке тепло',b:'при матери добро'},{a:'Нет милее дружка',b:'чем родная матушка'},{a:'Родина — мать',b:'умей за неё постоять'},{a:'Кто не работает',b:'тот не ест'}]}
+  ]},
+  { id:'variant', icon:'📝', title:'Вариант ВПР', desc:'Полный тест по образцу ВПР', shuffle:false, block:true, questions:[
+    {p:TEXT_A,q:'Что нашёл воробей на дороге?',opts:['Хлебную корку','Сыр','Ягоду','Зёрнышко'],ans:0,why:'В тексте: «нашёл на дороге хлебную корку».'},
+    {p:TEXT_A,q:'Кто отнял корку у воробья?',opts:['Ворона','Сорока','Кот','Ёж'],ans:0,why:'«Налетела ворона и отняла у воробья корку».'},
+    {p:TEXT_A,q:'Кто помог воробью вернуть корку?',opts:['Синицы','Воробьи','Голуби','Ласточки'],ans:0,why:'«Прилетели его друзья — синицы».'},
+    {p:TEXT_A,q:'Где воробей нашёл корку?',opts:['На дороге','В гнезде','На дереве','У реки'],ans:0,why:'В тексте: «нашёл на дороге».'},
+    {p:TEXT_A,q:'Что понял воробей в конце текста?',opts:['Вместе с друзьями легче справиться с бедой','Корку нужно прятать','Ворона сильнее всех','Лучше не выходить из гнезда'],ans:0,why:'Воробей понял, что друзья помогут в любой беде.'},
+    {p:TEXT_A,q:'Как можно озаглавить этот текст?',opts:['Верные друзья','Жадная ворона','Голодный воробей','Дождливый день'],ans:0,why:'Заголовок отражает главную мысль — о дружбе.'},
+    {p:TEXT_A,q:'Какая пословица подходит к тексту?',opts:['Один в поле не воин','Семь раз отмерь — один раз отрежь','Поспешишь — людей насмешишь','Ученье — свет'],ans:0,why:'Текст о том, что вместе (с друзьями) легче.'},
+    {p:TEXT_B,q:'Чем покрыто тело ежа?',opts:['Иголками','Шерстью','Перьями','Чешуёй'],ans:0,why:'«Тело покрыто иголками».'},
+    {p:TEXT_B,q:'Когда ёж выходит на охоту?',opts:['Ночью','Днём','Утром','Вечером'],ans:0,why:'«Ночью выходит на охоту».'},
+    {p:TEXT_B,q:'Чем питается ёж?',opts:['Жуками, гусеницами, червями','Травой и листьями','Орехами и грибами','Рыбой'],ans:0,why:'«Питается жуками, гусеницами, червями».'},
+    {p:TEXT_B,q:'Что делает ёж зимой?',opts:['Засыпает до весны','Улетает на юг','Ищет корм','Строит нору'],ans:0,why:'«К зиме накапливает жир и засыпает до весны».'},
+    {p:TEXT_B,q:'Как ёж защищается от врагов?',opts:['Сворачивается в клубок','Убегает','Прячется в воду','Кричит'],ans:0,why:'«Свернувшись в клубок, он прячет лапки и мордочку».'},
+    {p:TEXT_B,q:'Где ёж спит днём?',opts:['В норе или под кустом','На дереве','В гнезде','В поле'],ans:0,why:'«Днём ёж спит в норе или под кустом».'},
+    {p:TEXT_B,q:'К какому типу относится этот текст?',opts:['Научно-популярный','Художественный (сказка)','Стихотворение','Загадка'],ans:0,why:'Текст сообщает научные сведения о еже.'},
+    {p:TEXT_C,q:'Кого нашёл Витя в парке?',opts:['Птенца','Котёнка','Ёжика','Зайчонка'],ans:0,why:'В тексте: «нашёл на дорожке птенца».'},
+    {p:TEXT_C,q:'Где гулял Витя?',opts:['В парке','В лесу','Во дворе','У реки'],ans:0,why:'В тексте: «мальчик Витя гулял в парке».'},
+    {p:TEXT_C,q:'Почему птенец не мог взлететь?',opts:['Выпал из гнезда','Был ранен','Был голоден','Был маленьким'],ans:0,why:'«Птенец выпал из гнезда и не мог взлететь».'},
+    {p:TEXT_C,q:'Куда Витя посадил птенца?',opts:['На нижнюю ветку дерева','В коробку','В траву','В гнездо'],ans:0,why:'Витя «посадил его на нижнюю ветку дерева».'},
+    {p:TEXT_C,q:'Кто накормил птенца?',opts:['Птица-мама','Витя','Прохожий','Дворник'],ans:0,why:'«Прилетела птица-мама и накормила птенца».'},
+    {p:TEXT_C,q:'Что понял Витя?',opts:['Нужно помогать тем, кто в беде','Птенцов нельзя трогать','В парке много птиц','Гулять нужно осторожно'],ans:0,why:'Витя понял, что нужно помогать тем, кто попал в беду.'},
+    {p:TEXT_C,q:'Как можно озаглавить этот текст?',opts:['Добрый поступок','Прогулка в парке','Птичье гнездо','Осенний день'],ans:0,why:'Заголовок отражает главную мысль — о добром деле.'},
+    {p:TEXT_C,q:'Какая пословица подходит к тексту?',opts:['Жизнь дана на добрые дела','Семь раз отмерь — один раз отрежь','Без труда не вытащишь и рыбку из пруда','Поспешишь — людей насмешишь'],ans:0,why:'Текст о добром поступке, о помощи слабому.'},
+    {p:TEXT_D,q:'Какого цвета ствол берёзы?',opts:['Белый с чёрными полосками','Коричневый','Серый','Чёрный'],ans:0,why:'«Ствол берёзы белый с чёрными полосками».'},
+    {p:TEXT_D,q:'Какими становятся листья берёзы осенью?',opts:['Жёлтыми','Красными','Синими','Остаются зелёными'],ans:0,why:'«Осенью они становятся жёлтыми».'},
+    {p:TEXT_D,q:'Что берёза даёт весной?',opts:['Берёзовый сок','Ягоды','Грибы','Орехи'],ans:0,why:'«Весной берёза даёт сладкий берёзовый сок».'},
+    {p:TEXT_D,q:'Что делали из бересты в старину?',opts:['Посуду и письма','Одежду','Игрушки','Дома'],ans:0,why:'«Из бересты делали посуду и писали письма».'},
+    {p:TEXT_D,q:'Какие листья у берёзы?',opts:['Мелкие, зелёные','Большие, жёлтые','Колючие','Красные'],ans:0,why:'«Листья берёзы мелкие, зелёные».'},
+    {p:TEXT_D,q:'К какому типу относится этот текст?',opts:['Научно-популярный','Художественный (сказка)','Стихотворение','Загадка'],ans:0,why:'Текст сообщает научные сведения о берёзе.'},
+    {p:TEXT_E,q:'Кого лепил Саша?',opts:['Снеговика','Крепость','Горку','Зайца'],ans:0,why:'В тексте: «мальчик Саша лепил снеговика».'},
+    {p:TEXT_E,q:'Кто дрожал от холода рядом?',opts:['Щенок','Котёнок','Зайчонок','Воробей'],ans:0,why:'«Рядом сидел маленький щенок и дрожал от холода».'},
+    {p:TEXT_E,q:'Чем Саша укутал щенка?',opts:['Шарфом','Шапкой','Варежками','Курткой'],ans:0,why:'Саша «снял с себя шарф и укутал его».'},
+    {p:TEXT_E,q:'Что решили Саша и мама?',opts:['Взять щенка домой','Отдать соседям','Оставить на улице','Построить будку'],ans:0,why:'«Они решили взять его к себе».'},
+    {p:TEXT_E,q:'Каким был Саша?',opts:['Добрым и жалостливым','Жадным','Трусливым','Ленивым'],ans:0,why:'Саша пожалел щенка и укутал его шарфом.'},
+    {p:TEXT_E,q:'Как можно озаглавить этот текст?',opts:['Верный друг','Зимний день','Снеговик','Прогулка'],ans:0,why:'Заголовок отражает главную мысль — о дружбе.'},
+    {p:TEXT_E,q:'Какая пословица подходит к тексту?',opts:['Делай добро — и оно вернётся','Семь раз отмерь — один раз отрежь','Поспешишь — людей насмешишь','Ученье — свет'],ans:0,why:'Текст о добром поступке.'},
+    {p:TEXT_F,q:'Кого называют лесным доктором?',opts:['Дятла','Сову','Скворца','Воробья'],ans:0,why:'В тексте: «Дятел — лесной доктор».'},
+    {p:TEXT_F,q:'Чем дятел достаёт насекомых?',opts:['Клювом','Лапами','Крыльями','Хвостом'],ans:0,why:'«Крепким клювом он выдалбливает дырочки».'},
+    {p:TEXT_F,q:'Чем питается дятел?',opts:['Жуками-короедами','Ягодами','Орехами','Рыбой'],ans:0,why:'Дятлы «питаются жуками-короедами».'},
+    {p:TEXT_F,q:'Почему дятла называют санитаром леса?',opts:['Спасает деревья от вредителей','Красиво поёт','Строит гнёзда','Летает быстро'],ans:0,why:'Он «спасает деревья от вредителей».'},
+    {p:TEXT_F,q:'Где живут дятлы?',opts:['В лесах','В полях','В горах','У моря'],ans:0,why:'«Дятлы живут в лесах».'},
+    {p:TEXT_F,q:'Что выдалбливает дятел в стволах деревьев?',opts:['Дырочки','Гнёзда','Норы','Ступеньки'],ans:0,why:'Он «выдалбливает в стволах деревьев дырочки».'},
+    {p:TEXT_F,q:'К какому типу относится этот текст?',opts:['Научно-популярный','Художественный (сказка)','Стихотворение','Загадка'],ans:0,why:'Текст сообщает научные сведения о дятле.'},
+    {p:TEXT_G,q:'Как звали котёнка?',opts:['Пушок','Мурзик','Барсик','Рыжик'],ans:0,why:'В тексте: «у Насти был котёнок Пушок».'},
+    {p:TEXT_G,q:'Что случилось с Пушком?',opts:['Забрался на дерево','Убежал из дома','Попал под дождь','Потерялся'],ans:0,why:'«Пушок забрался на высокое дерево».'},
+    {p:TEXT_G,q:'Кто снял котёнка с дерева?',opts:['Дядя Коля','Настя','Мама','Папа'],ans:0,why:'«Сосед дядя Коля залез на дерево и снял Пушка».'},
+    {p:TEXT_G,q:'С помощью чего дядя Коля снял котёнка?',opts:['Лестницы','Верёвки','Палки','Ведра'],ans:0,why:'«Дядя Коля принёс лестницу».'},
+    {p:TEXT_G,q:'Что понял Пушок?',opts:['Не лазить так высоко','Не выходить из дома','Не есть много','Не спать днём'],ans:0,why:'«С тех пор котёнок больше не лазил так высоко».'},
+    {p:TEXT_G,q:'Как можно озаглавить этот текст?',opts:['Котёнок на дереве','Прогулка','Храбрый кот','Лесная поляна'],ans:0,why:'Заголовок отражает главное событие текста.'},
+    {p:TEXT_G,q:'Какая пословица подходит к тексту?',opts:['Друг познаётся в беде','Без труда не вытащишь и рыбку из пруда','Век живи — век учись','Тише едешь — дальше будешь'],ans:0,why:'Сосед помог Насте в трудную минуту.'},
+    {p:TEXT_H,q:'Какой цветок у подсолнуха?',opts:['Большой жёлтый','Маленький белый','Красный','Синий'],ans:0,why:'Подсолнух — растение «с большим жёлтым цветком».'},
+    {p:TEXT_H,q:'К чему поворачивается подсолнух?',opts:['К солнцу','К луне','К ветру','К земле'],ans:0,why:'Он «всегда поворачивает свою головку к солнцу».'},
+    {p:TEXT_H,q:'Что делают из семян подсолнуха?',opts:['Подсолнечное масло','Хлеб','Сахар','Сок'],ans:0,why:'«Из семян подсолнуха делают подсолнечное масло».'},
+    {p:TEXT_H,q:'Кто любит семечки подсолнуха?',opts:['Люди и птицы','Только кошки','Только рыбы','Никто'],ans:0,why:'«Его семечки любят и люди, и птицы».'},
+    {p:TEXT_H,q:'Каким растением назван подсолнух?',opts:['Полезным','Вредным','Редким','Ядовитым'],ans:0,why:'В тексте: «Подсолнух — очень полезное растение».'},
+    {p:TEXT_H,q:'Какого цвета лепестки у подсолнуха?',opts:['Жёлтые','Белые','Красные','Синие'],ans:0,why:'У подсолнуха жёлтый цветок, значит лепестки жёлтые.'},
+    {p:TEXT_H,q:'К какому типу относится этот текст?',opts:['Научно-популярный','Художественный (сказка)','Стихотворение','Загадка'],ans:0,why:'Текст сообщает научные сведения о подсолнухе.'}
+  ]}
+];
+const startScreen = document.getElementById('startScreen');
+const gameScreen = document.getElementById('gameScreen');
+const resultScreen = document.getElementById('resultScreen');
+const catGrid = document.getElementById('catGrid');
+const backBtn = document.getElementById('backBtn');
+const catPill = document.getElementById('catPill');
+const gradeBadge = document.getElementById('gradeBadge');
+const hintsEl = document.getElementById('hints');
+const answerInput = document.getElementById('answerInput');
+const checkBtn = document.getElementById('checkBtn');
+const feedbackEl = document.getElementById('feedback');
+const giveupBtn = document.getElementById('giveupBtn');
+const nextBtn = document.getElementById('nextBtn');
+const qNum = document.getElementById('qNum');
+const qTotal = document.getElementById('qTotal');
+const scorePill = document.getElementById('scorePill');
+const progressFill = document.getElementById('progressFill');
+const vprGrid = document.getElementById('vprGrid');
+const qTitle = document.getElementById('qTitle');
+const promptEl = document.getElementById('prompt');
+const passageEl = document.getElementById('passage');
+const inputRow = document.getElementById('inputRow');
+const optionsEl = document.getElementById('options');
+const matchBox = document.getElementById('matchBox');
+const matchLeft = document.getElementById('matchLeft');
+const matchRight = document.getElementById('matchRight');
+const blockBox = document.getElementById('blockBox');
+const qLabel = document.getElementById('qLabel');
+const questionCard = document.getElementById('questionCard');
+const toggleOpts = document.getElementById('toggleOpts');
+
+const questions = [];
+let current = 0;
+let score = 0;
+let hintsUsed = 0;
+let wrongAttempts = 0;
+let answered = false;
+let mode = 'quiz';
+let currentCat = null;
+let currentTrainer = null;
+let matchData = null;
+let blockData = null;
+let optsHidden = false;
+
+function show(el) { el.hidden = false; }
+function hide(el) { el.hidden = true; }
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function norm(s) {
+  return (s || '').toLowerCase().replace(/ё/g, 'е')
+    .replace(/[^а-яa-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+
+function stripGenre(s) {
+  return s.replace(/^(сказка о|сказка|стихотворение|стих|рассказ|басня|поэма|былина|житие|повесть|сказ|песня)\s+/, '');
+}
+
+function levenshtein(a, b) {
+  const m = a.length, n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  const d = [];
+  for (let i = 0; i <= m; i++) d[i] = [i];
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+    }
+  }
+  return d[m][n];
+}
+
+function isMatch(input, variants) {
+  const n = norm(input);
+  if (n.length < 2) return false;
+  for (const v of variants) {
+    const nv = norm(v);
+    if (!nv) continue;
+    if (n === nv) return true;
+    const maxDist = nv.length <= 5 ? 1 : nv.length <= 12 ? 2 : 3;
+    if (levenshtein(n, nv) <= maxDist) return true;
+    if (stripGenre(n) === nv || n === stripGenre(nv)) return true;
+  }
+  return false;
+}
+
+function pretty(q) {
+  const t = q.ans[0];
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+
+function renderCategories() {
+  catGrid.innerHTML = '';
+  CATEGORIES.forEach(c => {
+    const count = c.id === 'mixed' ? QUESTIONS.length : QUESTIONS.filter(q => q.cat === c.id).length;
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.innerHTML = '<div class="cat-emoji">' + c.emoji + '</div><div class="cat-title">' + c.title + '</div><div class="cat-desc">' + c.desc + '</div><span class="cat-count">' + count + ' заданий</span>';
+    btn.addEventListener('click', () => startGame(c));
+    catGrid.appendChild(btn);
+  });
+}
+
+function startGame(cat) {
+  mode = 'quiz';
+  currentCat = cat;
+  questions.length = 0;
+  const pool = cat.id === 'mixed' ? QUESTIONS : QUESTIONS.filter(q => q.cat === cat.id);
+  shuffle(pool).forEach(q => questions.push(q));
+  current = 0;
+  score = 0;
+  qTotal.textContent = questions.length;
+  catPill.textContent = cat.emoji + ' ' + cat.title;
+  hide(startScreen);
+  hide(resultScreen);
+  show(gameScreen);
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  qNum.textContent = current + 1;
+  scorePill.textContent = score;
+  progressFill.style.width = (current / questions.length * 100) + '%';
+  hintsUsed = 0;
+  wrongAttempts = 0;
+  answered = false;
+  blockData = null;
+  hide(feedbackEl);
+  feedbackEl.classList.remove('good', 'bad');
+  hide(giveupBtn);
+  hide(nextBtn);
+  optsHidden = false;
+  questionCard.classList.remove('hide-options');
+  toggleOpts.textContent = '🙈 Скрыть варианты';
+  hide(toggleOpts);
+  if (mode === 'quiz') {
+    qLabel.textContent = 'Вопрос';
+    show(inputRow);
+    show(hintsEl);
+    hide(optionsEl);
+    hide(promptEl);
+    hide(passageEl);
+    hide(matchBox);
+    hide(blockBox);
+    qTitle.textContent = 'Назови произведение';
+    if (q.gr) { gradeBadge.textContent = q.gr + ' класс'; show(gradeBadge); }
+    else hide(gradeBadge);
+    answerInput.value = '';
+    answerInput.disabled = false;
+    answerInput.style.borderColor = '';
+    checkBtn.disabled = false;
+    buildHints(q);
+    setTimeout(() => answerInput.focus(), 50);
+  } else {
+    hide(inputRow);
+    hide(hintsEl);
+    hide(gradeBadge);
+    qTitle.textContent = currentTrainer.title;
+    if (q.type === 'match') {
+      qLabel.textContent = 'Раунд';
+      hide(promptEl);
+      hide(passageEl);
+      hide(optionsEl);
+      hide(blockBox);
+      show(matchBox);
+      renderMatch(q);
+    } else if (q.passage && Array.isArray(q.questions)) {
+      qLabel.textContent = 'Текст';
+      hide(promptEl);
+      hide(optionsEl);
+      hide(matchBox);
+      show(toggleOpts);
+      renderBlock(q);
+    } else {
+      qLabel.textContent = 'Вопрос';
+      hide(matchBox);
+      hide(blockBox);
+      show(toggleOpts);
+      if (q.p) { passageEl.textContent = q.p; show(passageEl); }
+      else hide(passageEl);
+      promptEl.textContent = q.q;
+      show(promptEl);
+      buildOptions(q);
+    }
+  }
+}
+
+function buildHints(q) {
+  const list = [];
+  if (q.em) list.push({ type: 'emoji', label: '🔤 Показать эмодзи', content: q.em, cls: '' });
+  if (q.pic && pictures[q.pic]) list.push({ type: 'picture', label: '🖼️ Показать картинку', content: pictures[q.pic], cls: '' });
+  if (q.au) list.push({ type: 'author', label: '✍️ Кто написал?', content: q.au, cls: 'author' });
+  if (q.ln) list.push({ type: 'line', label: '📖 Показать строчку', content: q.ln, cls: 'line' });
+  hintsEl.innerHTML = '';
+  list.forEach(h => {
+    const wrap = document.createElement('div');
+    const btn = document.createElement('button');
+    btn.className = 'hint-btn';
+    btn.textContent = h.label;
+    btn.addEventListener('click', () => revealHint(btn, wrap, h));
+    const content = document.createElement('div');
+    content.className = 'hint-content' + (h.cls ? ' ' + h.cls : '');
+    content.hidden = true;
+    if (h.type === 'picture') content.innerHTML = h.content;
+    else content.textContent = h.content;
+    wrap.appendChild(btn);
+    wrap.appendChild(content);
+    hintsEl.appendChild(wrap);
+  });
+}
+
+function revealHint(btn, wrap, h) {
+  const content = wrap.querySelector('.hint-content');
+  content.hidden = false;
+  content.classList.add('reveal');
+  btn.classList.add('used');
+  btn.textContent = '✓ Использована';
+  btn.disabled = true;
+  hintsUsed++;
+}
+function renderVprMenu() {
+  vprGrid.innerHTML = '';
+  VPR.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.innerHTML = '<div class="cat-emoji">' + t.icon + '</div><div class="cat-title">' + t.title + '</div><div class="cat-desc">' + t.desc + '</div><span class="cat-count">' + t.questions.length + ' заданий</span>';
+    btn.addEventListener('click', () => startVpr(t));
+    vprGrid.appendChild(btn);
+  });
+}
+
+function groupBlocks(list) {
+  const blocks = [];
+  let cur = null;
+  list.forEach(q => {
+    if (!cur || cur.passage !== q.p) {
+      cur = { passage: q.p, questions: [] };
+      blocks.push(cur);
+    }
+    cur.questions.push({ q: q.q, opts: q.opts, ans: q.ans, why: q.why });
+  });
+  return blocks;
+}
+
+function startVpr(trainer) {
+  mode = 'vpr';
+  currentTrainer = trainer;
+  questions.length = 0;
+  if (trainer.block) {
+    let blocks = groupBlocks(trainer.questions);
+    if (trainer.shuffle !== false) blocks = shuffle(blocks);
+    blocks.forEach(b => questions.push(b));
+  } else {
+    const list = trainer.shuffle === false ? trainer.questions.slice() : shuffle(trainer.questions);
+    list.forEach(q => questions.push(q));
+  }
+  current = 0;
+  score = 0;
+  qTotal.textContent = questions.length;
+  catPill.textContent = trainer.icon + ' ' + trainer.title;
+  hide(startScreen);
+  hide(resultScreen);
+  show(gameScreen);
+  renderQuestion();
+}
+
+function buildOptions(q) {
+  optionsEl.innerHTML = '';
+  const letters = ['А', 'Б', 'В', 'Г'];
+  shuffle([0, 1, 2, 3]).forEach((origIdx, pos) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.dataset.idx = origIdx;
+    btn.innerHTML = '<span class="letter">' + letters[pos] + '</span><span>' + q.opts[origIdx] + '</span>';
+    btn.addEventListener('click', () => chooseOption(btn, origIdx, q));
+    optionsEl.appendChild(btn);
+  });
+  show(optionsEl);
+}
+
+function chooseOption(btn, idx, q) {
+  if (answered) return;
+  answered = true;
+  optionsEl.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (parseInt(b.dataset.idx, 10) === q.ans) b.classList.add('correct');
+  });
+  if (idx === q.ans) {
+    score += 10;
+    scorePill.textContent = score;
+    showFeedback('good', '<strong>Верно! +10 очков</strong><span class="fact">' + q.why + '</span>');
+    launchConfetti();
+  } else {
+    btn.classList.add('wrong');
+    showFeedback('bad', '<strong>Неверно.</strong><span class="fact">' + q.why + '</span>');
+  }
+  show(nextBtn);
+}
+
+function renderMatch(q) {
+  matchLeft.innerHTML = '';
+  matchRight.innerHTML = '';
+  matchData = { q, matchedCount: 0, mistakes: 0, selectedLeft: null };
+  const rightOrder = shuffle(q.pairs.map((p, i) => i));
+  q.pairs.forEach((p, i) => {
+    const lb = document.createElement('button');
+    lb.className = 'match-item';
+    lb.textContent = p.a;
+    lb.dataset.idx = i;
+    lb.addEventListener('click', () => selectLeft(lb, i));
+    matchLeft.appendChild(lb);
+  });
+  rightOrder.forEach(orig => {
+    const rb = document.createElement('button');
+    rb.className = 'match-item';
+    rb.textContent = q.pairs[orig].b;
+    rb.addEventListener('click', () => selectRight(rb, orig));
+    matchRight.appendChild(rb);
+  });
+}
+
+function selectLeft(btn, i) {
+  if (!matchData || btn.classList.contains('done')) return;
+  if (matchData.selectedLeft) matchData.selectedLeft.classList.remove('selected');
+  matchData.selectedLeft = btn;
+  btn.classList.add('selected');
+}
+
+function selectRight(btn, i) {
+  if (!matchData || btn.classList.contains('done')) return;
+  if (!matchData.selectedLeft) {
+    btn.classList.add('wrong-flash');
+    setTimeout(() => btn.classList.remove('wrong-flash'), 300);
+    return;
+  }
+  const leftIdx = parseInt(matchData.selectedLeft.dataset.idx, 10);
+  if (leftIdx === i) {
+    matchData.selectedLeft.classList.remove('selected');
+    matchData.selectedLeft.classList.add('done');
+    matchData.selectedLeft.disabled = true;
+    btn.classList.add('done');
+    btn.disabled = true;
+    matchData.selectedLeft = null;
+    matchData.matchedCount++;
+    if (matchData.matchedCount === matchData.q.pairs.length) finishMatch();
+  } else {
+    matchData.mistakes++;
+    const sel = matchData.selectedLeft;
+    sel.classList.add('wrong-flash');
+    btn.classList.add('wrong-flash');
+    setTimeout(() => {
+      if (sel && sel.classList) sel.classList.remove('wrong-flash');
+      btn.classList.remove('wrong-flash');
+    }, 300);
+  }
+}
+
+function finishMatch() {
+  answered = true;
+  const pts = Math.max(0, 10 - matchData.mistakes);
+  score += pts;
+  scorePill.textContent = score;
+  showFeedback('good', '<strong>Молодец! +' + pts + ' очков</strong><span class="fact">Все пословицы собраны верно.</span>');
+  launchConfetti();
+  show(nextBtn);
+}
+
+function renderBlock(item) {
+  passageEl.textContent = item.passage;
+  show(passageEl);
+  blockBox.innerHTML = '';
+  blockData = { item, answered: 0, total: item.questions.length, doneFlags: new Array(item.questions.length).fill(false) };
+  item.questions.forEach((sq, idx) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'bq';
+    const text = document.createElement('div');
+    text.className = 'bq-text';
+    text.innerHTML = '<span class="bq-num">' + (idx + 1) + '.</span>' + sq.q;
+    wrap.appendChild(text);
+    const opts = document.createElement('div');
+    opts.className = 'bq-opts';
+    shuffle([0, 1, 2, 3]).forEach(origIdx => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = sq.opts[origIdx];
+      b.dataset.idx = origIdx;
+      b.addEventListener('click', () => chooseBlockOption(wrap, b, sq, origIdx, idx));
+      opts.appendChild(b);
+    });
+    wrap.appendChild(opts);
+    const fb = document.createElement('div');
+    fb.className = 'bq-feedback';
+    fb.hidden = true;
+    wrap.appendChild(fb);
+    blockBox.appendChild(wrap);
+  });
+  show(blockBox);
+}
+
+function chooseBlockOption(wrap, btn, sq, oi, idx) {
+  if (!blockData || blockData.doneFlags[idx]) return;
+  blockData.doneFlags[idx] = true;
+  wrap.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (parseInt(b.dataset.idx, 10) === sq.ans) b.classList.add('correct');
+  });
+  const fb = wrap.querySelector('.bq-feedback');
+  if (oi === sq.ans) {
+    score += 10;
+    fb.textContent = '✓ Верно. ' + sq.why;
+    fb.classList.remove('bad');
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = '✗ Неверно. ' + sq.why;
+    fb.classList.add('bad');
+  }
+  fb.hidden = false;
+  scorePill.textContent = score;
+  blockData.answered++;
+  if (blockData.answered === blockData.total) {
+    show(nextBtn);
+    launchConfetti();
+  }
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const q = questions[current];
+  const val = answerInput.value;
+  if (isMatch(val, q.ans)) {
+    answered = true;
+    answerInput.disabled = true;
+    checkBtn.disabled = true;
+    const pts = Math.max(5, 30 - hintsUsed * 10 - wrongAttempts * 5);
+    score += pts;
+    scorePill.textContent = score;
+    showFeedback('good', '<strong>Верно! +' + pts + ' очков</strong><span class="fact">' + q.fact + '</span>');
+    launchConfetti();
+    hide(giveupBtn);
+    show(nextBtn);
+  } else {
+    wrongAttempts++;
+    answerInput.style.borderColor = 'var(--red)';
+    setTimeout(() => answerInput.style.borderColor = '', 400);
+    showFeedback('bad', '<strong>Не угадал. Попробуй ещё раз!</strong>');
+    answerInput.select();
+    if (wrongAttempts >= 2) show(giveupBtn);
+  }
+}
+
+function giveUp() {
+  if (answered) return;
+  const q = questions[current];
+  answered = true;
+  answerInput.disabled = true;
+  checkBtn.disabled = true;
+  hide(giveupBtn);
+  show(nextBtn);
+  showFeedback('bad', '<strong>Правильный ответ:</strong> <span class="right-answer">«' + pretty(q) + '»</span><span class="fact">' + q.fact + '</span>');
+}
+
+function showFeedback(cls, html) {
+  show(feedbackEl);
+  feedbackEl.className = 'feedback ' + cls;
+  feedbackEl.innerHTML = html;
+}
+
+function launchConfetti() {
+  const colors = ['#ff5252', '#ffca28', '#66bb6a', '#42a5f5', '#ab47bc', '#ff7043'];
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = (Math.random() * 100) + '%';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = (Math.random() * 0.4) + 's';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4500);
+  }
+}
+
+function next() {
+  current++;
+  progressFill.style.width = (current / questions.length * 100) + '%';
+  if (current >= questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function computeMax() {
+  if (mode === 'quiz') return questions.length * 30;
+  let n = 0;
+  questions.forEach(q => {
+    if (q.passage && Array.isArray(q.questions)) n += q.questions.length;
+    else n += 1;
+  });
+  return n * 10;
+}
+
+function showResults() {
+  hide(gameScreen);
+  show(resultScreen);
+  const max = computeMax();
+  const pct = score / max;
+  let stars, emoji, title, msg;
+  if (pct >= 0.85) { stars = 3; emoji = '🏆'; title = 'Великолепно!'; msg = 'Ты настоящий знаток литературы!'; }
+  else if (pct >= 0.6) { stars = 2; emoji = '🎉'; title = 'Отлично!'; msg = 'Ты хорошо знаешь произведения школьной программы!'; }
+  else if (pct >= 0.35) { stars = 1; emoji = '👍'; title = 'Неплохо!'; msg = 'Попробуй ещё раз — получится лучше!'; }
+  else { stars = 0; emoji = '📚'; title = 'Стоит перечитать!'; msg = 'Перечитай эти книги и приходи снова!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('resultMsg').textContent = msg;
+
+  const starsEl = document.getElementById('stars');
+  starsEl.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement('span');
+    s.className = 'star' + (i < stars ? ' on' : '');
+    s.textContent = '⭐';
+    starsEl.appendChild(s);
+  }
+}
+
+checkBtn.addEventListener('click', checkAnswer);
+answerInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+giveupBtn.addEventListener('click', giveUp);
+nextBtn.addEventListener('click', next);
+document.getElementById('restartBtn').addEventListener('click', () => {
+  if (mode === 'quiz') startGame(currentCat);
+  else startVpr(currentTrainer);
+});
+document.getElementById('menuBtn').addEventListener('click', () => { hide(resultScreen); show(startScreen); });
+backBtn.addEventListener('click', () => { hide(gameScreen); show(startScreen); });
+toggleOpts.addEventListener('click', () => {
+  optsHidden = !optsHidden;
+  questionCard.classList.toggle('hide-options', optsHidden);
+  toggleOpts.textContent = optsHidden ? '👁️ Показать варианты' : '🙈 Скрыть варианты';
+});
+
+renderCategories();
+renderVprMenu();
+</script>
+</script>
+</body>
+</html>
